@@ -9,6 +9,15 @@ import SwiftUI
 import Functions
 import Supabase
 
+struct MemorySummaryResponse: Codable {
+    let data: SummaryData
+
+    struct SummaryData: Codable {
+        let summary: String
+        let totalMemories: Int
+    }
+}
+
 struct ContentView: View {
     @StateObject private var authService = AuthService()
     @State private var memories: [Memory] = []
@@ -152,11 +161,11 @@ struct ContentView: View {
                 "action": "summarizeMemories"
             ]
 
-            let response: String = try await SupabaseManager.shared.client.functions
+            let response: MemorySummaryResponse = try await SupabaseManager.shared.client.functions
                 .invoke("memory-fetch", options: FunctionInvokeOptions(body: requestBody))
 
             print("Edge function response: \(response)")
-            edgeFunctionResponse = "Status: Success\n\nResponse:\n\(response)"
+            edgeFunctionResponse = "Status: Success\n\nTotal Memories: \(response.data.totalMemories)\n\nSummary:\n\(response.data.summary)"
             showingEdgeResponse = true
 
         } catch {
