@@ -1,0 +1,619 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2590A6362EE13353003E7759 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 2590A6352EE13353003E7759 /* Supabase */; };
+		2590A6382EE13358003E7759 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 2590A6372EE13358003E7759 /* Functions */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2590A5DB2ED960C0003E7759 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2590A5C02ED960BC003E7759 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2590A5C72ED960BC003E7759;
+			remoteInfo = "Memento AI";
+		};
+		2590A5E52ED960C0003E7759 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2590A5C02ED960BC003E7759 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2590A5C72ED960BC003E7759;
+			remoteInfo = "Memento AI";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2590A5C82ED960BC003E7759 /* Memento AI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Memento AI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2590A5DA2ED960C0003E7759 /* Memento AITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Memento AITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2590A5E42ED960C0003E7759 /* Memento AIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Memento AIUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2590A5CA2ED960BC003E7759 /* Memento AI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Memento AI";
+			sourceTree = "<group>";
+		};
+		2590A5DD2ED960C0003E7759 /* Memento AITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Memento AITests";
+			sourceTree = "<group>";
+		};
+		2590A5E72ED960C0003E7759 /* Memento AIUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Memento AIUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2590A5C52ED960BC003E7759 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2590A6382EE13358003E7759 /* Functions in Frameworks */,
+				2590A6362EE13353003E7759 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5D72ED960C0003E7759 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5E12ED960C0003E7759 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2590A5BF2ED960BC003E7759 = {
+			isa = PBXGroup;
+			children = (
+				2590A5CA2ED960BC003E7759 /* Memento AI */,
+				2590A5DD2ED960C0003E7759 /* Memento AITests */,
+				2590A5E72ED960C0003E7759 /* Memento AIUITests */,
+				2590A6342EE13353003E7759 /* Frameworks */,
+				2590A5C92ED960BC003E7759 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2590A5C92ED960BC003E7759 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2590A5C82ED960BC003E7759 /* Memento AI.app */,
+				2590A5DA2ED960C0003E7759 /* Memento AITests.xctest */,
+				2590A5E42ED960C0003E7759 /* Memento AIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2590A6342EE13353003E7759 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2590A5C72ED960BC003E7759 /* Memento AI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2590A5EE2ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AI" */;
+			buildPhases = (
+				2590A5C42ED960BC003E7759 /* Sources */,
+				2590A5C52ED960BC003E7759 /* Frameworks */,
+				2590A5C62ED960BC003E7759 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2590A5CA2ED960BC003E7759 /* Memento AI */,
+			);
+			name = "Memento AI";
+			packageProductDependencies = (
+				2590A6352EE13353003E7759 /* Supabase */,
+				2590A6372EE13358003E7759 /* Functions */,
+			);
+			productName = "Memento AI";
+			productReference = 2590A5C82ED960BC003E7759 /* Memento AI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2590A5D92ED960C0003E7759 /* Memento AITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2590A5F12ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AITests" */;
+			buildPhases = (
+				2590A5D62ED960C0003E7759 /* Sources */,
+				2590A5D72ED960C0003E7759 /* Frameworks */,
+				2590A5D82ED960C0003E7759 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2590A5DC2ED960C0003E7759 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2590A5DD2ED960C0003E7759 /* Memento AITests */,
+			);
+			name = "Memento AITests";
+			packageProductDependencies = (
+			);
+			productName = "Memento AITests";
+			productReference = 2590A5DA2ED960C0003E7759 /* Memento AITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2590A5E32ED960C0003E7759 /* Memento AIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2590A5F42ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AIUITests" */;
+			buildPhases = (
+				2590A5E02ED960C0003E7759 /* Sources */,
+				2590A5E12ED960C0003E7759 /* Frameworks */,
+				2590A5E22ED960C0003E7759 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2590A5E62ED960C0003E7759 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2590A5E72ED960C0003E7759 /* Memento AIUITests */,
+			);
+			name = "Memento AIUITests";
+			packageProductDependencies = (
+			);
+			productName = "Memento AIUITests";
+			productReference = 2590A5E42ED960C0003E7759 /* Memento AIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2590A5C02ED960BC003E7759 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2610;
+				LastUpgradeCheck = 2610;
+				TargetAttributes = {
+					2590A5C72ED960BC003E7759 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
+					2590A5D92ED960C0003E7759 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = 2590A5C72ED960BC003E7759;
+					};
+					2590A5E32ED960C0003E7759 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = 2590A5C72ED960BC003E7759;
+					};
+				};
+			};
+			buildConfigurationList = 2590A5C32ED960BC003E7759 /* Build configuration list for PBXProject "Memento AI" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2590A5BF2ED960BC003E7759;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2590A6012ED961FB003E7759 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2590A5C92ED960BC003E7759 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2590A5C72ED960BC003E7759 /* Memento AI */,
+				2590A5D92ED960C0003E7759 /* Memento AITests */,
+				2590A5E32ED960C0003E7759 /* Memento AIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2590A5C62ED960BC003E7759 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5D82ED960C0003E7759 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5E22ED960C0003E7759 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2590A5C42ED960BC003E7759 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5D62ED960C0003E7759 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2590A5E02ED960C0003E7759 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2590A5DC2ED960C0003E7759 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2590A5C72ED960BC003E7759 /* Memento AI */;
+			targetProxy = 2590A5DB2ED960C0003E7759 /* PBXContainerItemProxy */;
+		};
+		2590A5E62ED960C0003E7759 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2590A5C72ED960BC003E7759 /* Memento AI */;
+			targetProxy = 2590A5E52ED960C0003E7759 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2590A5EC2ED960C0003E7759 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2590A5ED2ED960C0003E7759 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2590A5EF2ED960C0003E7759 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2590A5F02ED960C0003E7759 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2590A5F22ED960C0003E7759 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Memento AI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Memento AI";
+			};
+			name = Debug;
+		};
+		2590A5F32ED960C0003E7759 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Memento AI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Memento AI";
+			};
+			name = Release;
+		};
+		2590A5F52ED960C0003E7759 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AIUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Memento AI";
+			};
+			name = Debug;
+		};
+		2590A5F62ED960C0003E7759 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ronjoshi.Memento-AIUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Memento AI";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2590A5C32ED960BC003E7759 /* Build configuration list for PBXProject "Memento AI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2590A5EC2ED960C0003E7759 /* Debug */,
+				2590A5ED2ED960C0003E7759 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2590A5EE2ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2590A5EF2ED960C0003E7759 /* Debug */,
+				2590A5F02ED960C0003E7759 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2590A5F12ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2590A5F22ED960C0003E7759 /* Debug */,
+				2590A5F32ED960C0003E7759 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2590A5F42ED960C0003E7759 /* Build configuration list for PBXNativeTarget "Memento AIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2590A5F52ED960C0003E7759 /* Debug */,
+				2590A5F62ED960C0003E7759 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2590A6012ED961FB003E7759 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2590A6352EE13353003E7759 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2590A6012ED961FB003E7759 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		2590A6372EE13358003E7759 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2590A6012ED961FB003E7759 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2590A5C02ED960BC003E7759 /* Project object */;
+}
