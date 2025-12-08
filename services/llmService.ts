@@ -5,10 +5,18 @@ import { LLMModel, getModelIdentifier } from "../types/models.ts";
 
 // Load environment variables for Deno
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "";
+const OPENROUTER_EMBEDDINGS_KEY =
+	Deno.env.get("OPENROUTER_OPENAI_EMBEDDINGS_KEY") || "";
 
-const openai = new OpenAI({
+const chatClient = new OpenAI({
 	baseURL: "https://openrouter.ai/api/v1",
 	apiKey: OPENROUTER_API_KEY,
+	defaultHeaders: {},
+});
+
+const embeddingsClient = new OpenAI({
+	baseURL: "https://openrouter.ai/api/v1",
+	apiKey: OPENROUTER_EMBEDDINGS_KEY,
 	defaultHeaders: {},
 });
 
@@ -31,7 +39,7 @@ export class LLMService {
 		config: LLMConfig = {}
 	): Promise<string> {
 		try {
-			const completion = await openai.chat.completions.create({
+			const completion = await chatClient.chat.completions.create({
 				model: getModelIdentifier(config.model || this.defaultModel),
 				messages: messages,
 				temperature: config.temperature,
@@ -54,6 +62,16 @@ export class LLMService {
 		];
 
 		return this.chatCompletion(messages, config);
+	}
+
+	async getEmbedding() {
+		const embedding = await embeddingsClient.embeddings.create({
+			model: "openai/text-embedding-3-small",
+			input: "what was my work ethic like last week?",
+			encoding_format: "float",
+		});
+
+		console.log(embedding.data[0].embedding);
 	}
 }
 

@@ -1,19 +1,48 @@
 import Foundation
 import Supabase
+import PostgREST
 
 struct Memory: Codable {
-    let id: UUID
+    let id: UUID?
     let userId: UUID
     let memoryData: String
     let tag: String
-    let createdAt: Date
-    
+    let createdAt: Date?
+    let embedding: [Double]?
+
     private enum CodingKeys: String, CodingKey {
         case id
         case userId = "user_id"
         case memoryData = "memory_data"
         case tag
         case createdAt = "created_at"
+        case embedding
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id)
+        userId = try container.decode(UUID.self, forKey: .userId)
+        memoryData = try container.decode(String.self, forKey: .memoryData)
+        tag = try container.decode(String.self, forKey: .tag)
+        createdAt = try container.decodeIfPresent(Date.self, forKey: .createdAt)
+
+        // Try to decode embedding, but gracefully handle if it doesn't exist or is in wrong format
+        if let embeddingArray = try? container.decodeIfPresent([Double].self, forKey: .embedding) {
+            embedding = embeddingArray
+        } else {
+            // If it fails (null, wrong type, etc.), just set to nil
+            embedding = nil
+        }
+    }
+
+    init(id: UUID?, userId: UUID, memoryData: String, tag: String, createdAt: Date?, embedding: [Double]?) {
+        self.id = id
+        self.userId = userId
+        self.memoryData = memoryData
+        self.tag = tag
+        self.createdAt = createdAt
+        self.embedding = embedding
     }
 }
 
@@ -115,18 +144,23 @@ class DatabaseService {
         return memoriesWithTags
     }
     
-    func insertMemory(memoryData: String, tag: String) async throws {
+    func insertMemory(memoryData: String, tag: String, embedding: [Double]) async throws {
         guard let userId = supabase.auth.currentUser?.id else {
             throw NSError(domain: "AuthError", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
         }
         
+        let memory = Memory(
+            id: nil,
+            userId: userId,
+            memoryData: memoryData,
+            tag: tag,
+            createdAt: nil,
+            embedding: embedding
+        )
+        
         let response = try await supabase
             .from("memories")
-            .insert([
-                "user_id": userId.uuidString,
-                "memory_data": memoryData,
-                "tag": tag
-            ])
+            .insert(memory)
             .single()
             .execute()
 //            .value

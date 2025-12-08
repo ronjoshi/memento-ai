@@ -49,7 +49,7 @@ struct ContentView: View {
                                             .background(Color.blue.opacity(0.2))
                                             .cornerRadius(8)
                                         Spacer()
-                                        Text(memory.createdAt, formatter: dateFormatter)
+                                        Text(memory.createdAt ?? Date(), formatter: dateFormatter)
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
@@ -134,9 +134,14 @@ struct ContentView: View {
         Task {
             isLoading = true
             do {
-                let _ = try await databaseService.insertMemory(
+                // Generate embedding for the memory content
+                let embedding = try await generateEmbedding(for: memoryText)
+                print("Generated embedding with \(embedding.count) dimensions")
+
+                try await databaseService.insertMemory(
                     memoryData: memoryText,
-                    tag: tagText
+                    tag: tagText,
+                    embedding: embedding
                 )
                 await loadMemories()
                 memoryText = ""
@@ -147,6 +152,42 @@ struct ContentView: View {
             }
             isLoading = false
         }
+    }
+
+    private func generateEmbedding(for text: String) async throws -> [Double] {
+        guard let apiKey = ProcessInfo.processInfo.environment["OPENROUTER_OPENAI_EMBEDDINGS_KEY"] else {
+            throw NSError(domain: "EmbeddingError", code: 1, userInfo: [NSLocalizedDescriptionKey: "API key not found"])
+        }
+
+        let url = URL(string: "https://openrouter.ai/api/v1/embeddings")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+
+        let requestBody: [String: Any] = [
+            "model": "openai/text-embedding-3-small",
+            "input": text,
+            "encoding_format": "float"
+        ]
+
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw NSError(domain: "EmbeddingError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Invalid response from API"])
+        }
+
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let dataArray = json?["data"] as? [[String: Any]],
+              let firstResult = dataArray.first,
+              let embedding = firstResult["embedding"] as? [Double] else {
+            throw NSError(domain: "EmbeddingError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Failed to parse embedding response"])
+        }
+
+        return embedding
     }
 
     private func callEdgeFunction() async {
