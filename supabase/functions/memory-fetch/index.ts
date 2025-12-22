@@ -2,21 +2,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 import { llmService } from "../../../services/llmService.ts";
-
-interface Memory {
-	id: string;
-	user_id: string;
-	memory_data: string;
-	tag: string;
-	created_at: string;
-}
-
-interface Tag {
-	id: number;
-	user_id: string;
-	name: string;
-	created_at: string;
-}
+import { Memory, Tag } from "../common/types.ts";
 
 interface MemoryWithTag extends Memory {
 	tags: Tag[];

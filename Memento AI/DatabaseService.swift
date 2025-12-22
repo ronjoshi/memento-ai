@@ -25,7 +25,17 @@ struct Memory: Codable {
         userId = try container.decode(UUID.self, forKey: .userId)
         memoryData = try container.decode(String.self, forKey: .memoryData)
         tag = try container.decode(String.self, forKey: .tag)
-        createdAt = try container.decodeIfPresent(Date.self, forKey: .createdAt)
+
+        // Try to decode createdAt as Date first, then fall back to parsing from string
+        if let date = try? container.decodeIfPresent(Date.self, forKey: .createdAt) {
+            createdAt = date
+        } else if let dateString = try? container.decodeIfPresent(String.self, forKey: .createdAt) {
+            // Parse ISO 8601 date string
+            let formatter = ISO8601DateFormatter()
+            createdAt = formatter.date(from: dateString)
+        } else {
+            createdAt = nil
+        }
 
         // Try to decode embedding, but gracefully handle if it doesn't exist or is in wrong format
         if let embeddingArray = try? container.decodeIfPresent([Double].self, forKey: .embedding) {
@@ -148,25 +158,21 @@ class DatabaseService {
         guard let userId = supabase.auth.currentUser?.id else {
             throw NSError(domain: "AuthError", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
         }
-        
+
         let memory = Memory(
             id: nil,
             userId: userId,
             memoryData: memoryData,
             tag: tag,
-            createdAt: nil,
+            createdAt: Date(),
             embedding: embedding
         )
-        
+
         let response = try await supabase
             .from("memories")
             .insert(memory)
             .single()
             .execute()
-//            .value
-//        return memory
-        print("asdf")
-        print(String(data: response.data, encoding: .utf8))
     }
     
     func fetchTags() async throws -> [Tag] {
