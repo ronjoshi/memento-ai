@@ -9,35 +9,6 @@ import SwiftUI
 import Functions
 import Supabase
 
-struct MemorySummaryResponse: Codable {
-    let data: SummaryData
-
-    struct SummaryData: Codable {
-        let summary: String
-        let totalMemories: Int
-    }
-}
-
-struct SearchMemoriesResponse: Codable {
-    let data: [Memory]
-    let query: String
-    let matchCount: Int
-}
-
-struct SearchMemoriesRequest: Codable {
-    let query: String
-    let matchCount: Int
-    let startTime: String?
-    let endTime: String?
-
-    init(query: String, matchCount: Int = 5, startTime: String? = nil, endTime: String? = nil) {
-        self.query = query
-        self.matchCount = matchCount
-        self.startTime = startTime
-        self.endTime = endTime
-    }
-}
-
 struct ContentView: View {
     @StateObject private var authService = AuthService()
     @State private var memories: [Memory] = []
@@ -48,10 +19,7 @@ struct ContentView: View {
     @State private var edgeFunctionResponse = ""
     @State private var showingEdgeResponse = false
     @State private var selectedTab = 0
-    @State private var searchQuery = ""
-    @State private var searchResults: [Memory] = []
     @State private var showingSearch = false
-    @State private var isSearching = false
 
     private let databaseService = DatabaseService.shared
     
@@ -102,7 +70,7 @@ struct ContentView: View {
 
                                 Button("Test Edge") {
                                     Task {
-                                        await callEdgeFunction()
+                                        await testEdgeFunction()
                                     }
                                 }
                                 .foregroundColor(.green)
@@ -122,12 +90,7 @@ struct ContentView: View {
                         )
                     }
                     .sheet(isPresented: $showingSearch) {
-                        SearchMemoriesView(
-                            searchQuery: $searchQuery,
-                            searchResults: $searchResults,
-                            isSearching: $isSearching,
-                            onSearch: searchMemories
-                        )
+                        SearchView()
                     }
                     .task {
                         await loadMemories()
@@ -226,54 +189,16 @@ struct ContentView: View {
         return embedding
     }
 
-    private func callEdgeFunction() async {
-        guard SupabaseManager.shared.client.auth.currentUser != nil else {
-            edgeFunctionResponse = "User not authenticated"
-            showingEdgeResponse = true
-            return
-        }
-
+    private func testEdgeFunction() async {
         do {
-            let requestBody = [
-                "action": "summarizeMemories"
-            ]
-
-            let response: MemorySummaryResponse = try await SupabaseManager.shared.client.functions
-                .invoke("memory-fetch", options: FunctionInvokeOptions(body: requestBody))
-
+            let response = try await EdgeFunctionService.shared.summarizeMemories()
             print("Edge function response: \(response)")
             edgeFunctionResponse = "Status: Success\n\nTotal Memories: \(response.data.totalMemories)\n\nSummary:\n\(response.data.summary)"
             showingEdgeResponse = true
-
         } catch {
             print("Error calling edge function: \(error)")
             edgeFunctionResponse = "Error: \(error.localizedDescription)"
             showingEdgeResponse = true
-        }
-    }
-
-    private func searchMemories() {
-        guard !searchQuery.isEmpty else { return }
-
-        Task {
-            isSearching = true
-            do {
-                let requestBody = SearchMemoriesRequest(
-                    query: searchQuery,
-                    matchCount: 5
-                )
-
-                let response: SearchMemoriesResponse = try await SupabaseManager.shared.client.functions
-                    .invoke("search-memories", options: FunctionInvokeOptions(body: requestBody))
-
-                print("Search response: \(response)")
-                searchResults = response.data
-
-            } catch {
-                print("Error searching memories: \(error)")
-                searchResults = []
-            }
-            isSearching = false
         }
     }
 }
@@ -284,77 +209,6 @@ private let dateFormatter: DateFormatter = {
     formatter.timeStyle = .short
     return formatter
 }()
-
-struct SearchMemoriesView: View {
-    @Binding var searchQuery: String
-    @Binding var searchResults: [Memory]
-    @Binding var isSearching: Bool
-    var onSearch: () -> Void
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationView {
-            VStack {
-                HStack {
-                    TextField("Search memories...", text: $searchQuery)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-
-                    Button(action: onSearch) {
-                        if isSearching {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
-                        } else {
-                            Image(systemName: "magnifyingglass")
-                        }
-                    }
-                    .disabled(searchQuery.isEmpty || isSearching)
-                    .padding(.trailing)
-                }
-
-                if searchResults.isEmpty && !searchQuery.isEmpty && !isSearching {
-                    Text("No results found")
-                        .foregroundColor(.secondary)
-                        .padding()
-                    Spacer()
-                } else if !searchResults.isEmpty {
-                    List {
-                        ForEach(searchResults, id: \.id) { memory in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(memory.memoryData)
-                                    .font(.body)
-                                HStack {
-                                    Text(memory.tag)
-                                        .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.blue.opacity(0.2))
-                                        .cornerRadius(8)
-                                    Spacer()
-                                    Text(memory.createdAt ?? Date(), formatter: dateFormatter)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.vertical, 4)
-                        }
-                    }
-                } else {
-                    Spacer()
-                }
-            }
-            .navigationTitle("Search Memories")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                }
-            }
-        }
-    }
-}
 
 #Preview {
     ContentView()
