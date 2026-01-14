@@ -67,3 +67,5 @@ playground.xcworkspace
 Network Trash Folder
 Temporary Items
 .apdisk
+.vercel
+.env*.local
