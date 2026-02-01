@@ -24,9 +24,9 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="relative flex items-center">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <svg
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search your memories..."
-          className="block w-full pl-10 pr-20 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="block w-full pl-12 pr-24 py-3 border border-border rounded-xl bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
           disabled={isLoading}
         />
 
@@ -53,7 +53,7 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-16 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="absolute right-20 text-muted-foreground hover:text-foreground"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -64,10 +64,10 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
         <button
           type="submit"
           disabled={isLoading || !query.trim()}
-          className="absolute right-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-md transition-colors"
+          className="absolute right-2 px-4 py-1.5 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-sm"
         >
           {isLoading ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground border-t-transparent"></div>
           ) : (
             'Search'
           )}

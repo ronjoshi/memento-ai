@@ -42,14 +42,15 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-4xl font-bold text-foreground mb-2">
             Memento AI
           </h1>
-          <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-300">
-            {isSignUp ? 'Sign Up' : 'Sign In'}
+          <p className="text-muted-foreground mb-4">Your personal memory vault</p>
+          <h2 className="text-2xl font-semibold text-foreground">
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
           </h2>
         </div>
 
@@ -67,7 +68,7 @@ export default function AuthForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800"
+                className="appearance-none relative block w-full px-4 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl bg-card focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                 placeholder="Email"
               />
             </div>
@@ -84,29 +85,29 @@ export default function AuthForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800"
+                className="appearance-none relative block w-full px-4 py-3 border border-border placeholder-muted-foreground text-foreground rounded-xl bg-card focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                 placeholder="Password"
               />
             </div>
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-4">
-              <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+            <div className="rounded-xl bg-error-light p-4 border border-error/20">
+              <p className="text-sm text-error">{error}</p>
             </div>
           )}
 
           {isLoading ? (
             <div className="flex justify-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
             </div>
           ) : (
             <>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring shadow-sm hover:shadow-md"
               >
-                {isSignUp ? 'Sign Up' : 'Sign In'}
+                {isSignUp ? 'Create Account' : 'Sign In'}
               </button>
 
               <button
@@ -115,7 +116,7 @@ export default function AuthForm() {
                   setIsSignUp(!isSignUp)
                   setError('')
                 }}
-                className="w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors"
+                className="w-full text-center text-sm text-primary hover:text-primary-hover"
               >
                 {isSignUp
                   ? 'Already have an account? Sign In'

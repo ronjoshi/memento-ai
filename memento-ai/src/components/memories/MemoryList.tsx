@@ -14,12 +14,12 @@ export default function MemoryList({ memories, isLoading, onRefresh }: MemoryLis
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 animate-pulse">
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-3"></div>
+          <div key={i} className="bg-card rounded-xl shadow-sm border border-card-border p-4 animate-pulse">
+            <div className="h-4 bg-muted rounded w-3/4 mb-3"></div>
+            <div className="h-4 bg-muted rounded w-1/2 mb-3"></div>
             <div className="flex justify-between">
-              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+              <div className="h-5 bg-muted rounded w-16"></div>
+              <div className="h-4 bg-muted rounded w-24"></div>
             </div>
           </div>
         ))}
@@ -30,7 +30,7 @@ export default function MemoryList({ memories, isLoading, onRefresh }: MemoryLis
   if (memories.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-400 dark:text-gray-500 mb-4">
+        <div className="text-muted-foreground mb-4">
           <svg
             className="mx-auto h-12 w-12"
             fill="none"
@@ -45,10 +45,10 @@ export default function MemoryList({ memories, isLoading, onRefresh }: MemoryLis
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+        <h3 className="text-lg font-medium text-foreground mb-1">
           No memories yet
         </h3>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-muted-foreground">
           Create your first memory to get started.
         </p>
       </div>
@@ -60,9 +60,9 @@ export default function MemoryList({ memories, isLoading, onRefresh }: MemoryLis
       {onRefresh && (
         <button
           onClick={onRefresh}
-          className="w-full py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors"
+          className="w-full py-2 text-sm text-primary hover:text-primary-hover transition-colors"
         >
-          Pull to refresh
+          Tap to refresh
         </button>
       )}
       {memories.map((memory) => (

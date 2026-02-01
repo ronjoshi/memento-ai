@@ -50,16 +50,16 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-foreground/50 backdrop-blur-sm"
         onClick={handleClose}
       />
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-xl transition-all">
+        <div className="relative w-full max-w-lg transform overflow-hidden rounded-2xl bg-card shadow-xl border border-card-border">
           {/* Header */}
-          <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="border-b border-border px-6 py-4">
+            <h3 className="text-lg font-semibold text-card-foreground">
               Add Memory
             </h3>
           </div>
@@ -69,7 +69,7 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
             <div>
               <label
                 htmlFor="memory-content"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-card-foreground mb-2"
               >
                 Memory
               </label>
@@ -79,7 +79,7 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
                 value={memoryText}
                 onChange={(e) => setMemoryText(e.target.value)}
                 placeholder="What do you want to remember?"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
+                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground resize-none"
                 disabled={isLoading}
               />
             </div>
@@ -87,7 +87,7 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
             <div>
               <label
                 htmlFor="memory-tag"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-card-foreground mb-2"
               >
                 Tag
               </label>
@@ -97,25 +97,25 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
                 value={tagText}
                 onChange={(e) => setTagText(e.target.value)}
                 placeholder="e.g., work, personal, ideas"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground"
                 disabled={isLoading}
               />
             </div>
 
             {error && (
-              <div className="rounded-lg bg-red-50 dark:bg-red-900/20 p-3">
-                <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+              <div className="rounded-xl bg-error-light p-3 border border-error/20">
+                <p className="text-sm text-error">{error}</p>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-end space-x-3">
+          <div className="border-t border-border px-6 py-4 flex justify-end space-x-3">
             <button
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground bg-muted hover:bg-secondary/10 rounded-xl disabled:opacity-50"
             >
               Cancel
             </button>
@@ -123,15 +123,15 @@ export default function AddMemoryModal({ isOpen, onClose, onSave }: AddMemoryMod
               type="button"
               onClick={handleSave}
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 flex items-center"
+              className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl disabled:opacity-50 flex items-center shadow-sm"
             >
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground border-t-transparent mr-2"></div>
                   Saving...
                 </>
               ) : (
-                'Save'
+                'Save Memory'
               )}
             </button>
           </div>
