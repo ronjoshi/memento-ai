@@ -1,7 +1,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
-import { llmService } from "../../../services/llmService.ts";
+import { llmService } from "../../services/llmService.js";
 import { Memory, Tag } from "../common/types.ts";
 
 interface MemoryWithTag extends Memory {

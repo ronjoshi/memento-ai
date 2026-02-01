@@ -8,11 +8,11 @@ interface EmbeddingResponse {
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-	const apiKey = process.env.OPENROUTER_EMBEDDINGS_KEY;
+	const apiKey = process.env.OPENROUTER_OPENAI_EMBEDDINGS_KEY;
 
 	if (!apiKey) {
 		throw new Error(
-			"OPENROUTER_EMBEDDINGS_KEY not found in environment variables"
+			"OPENROUTER_OPENAI_EMBEDDINGS_KEY not found in environment variables",
 		);
 	}
 
@@ -36,7 +36,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
 	if (!response.ok) {
 		const errorText = await response.text();
 		throw new Error(
-			`Invalid response from embeddings API: ${response.status} - ${errorText}`
+			`Invalid response from embeddings API: ${response.status} - ${errorText}`,
 		);
 	}
 

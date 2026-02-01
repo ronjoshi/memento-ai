@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd memento-ai && npm run build",
+  "devCommand": "cd memento-ai && npm run dev",
+  "installCommand": "cd memento-ai && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "memento-ai/.next"
+}
