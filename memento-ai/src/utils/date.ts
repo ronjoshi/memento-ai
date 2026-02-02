@@ -1,6 +1,6 @@
 import { format, parseISO } from "date-fns";
 
-// Format date to match iOS app display: "1/15/26, 3:45 PM"
+// Format date display: "1/15/26, 3:45 PM"
 export function formatDate(dateString: string): string {
 	try {
 		const date = parseISO(dateString);

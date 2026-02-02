@@ -1,5 +1,3 @@
-// Core type definitions matching the Swift models from iOS app
-
 export interface Memory {
 	id: string;
 	userId: string;

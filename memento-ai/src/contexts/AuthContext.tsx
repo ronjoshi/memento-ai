@@ -1,6 +1,5 @@
 "use client";
 
-// Authentication context - ports AuthService.swift functionality
 import {
 	createContext,
 	useContext,
@@ -38,8 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				} = await supabase.auth.getUser();
 				setUser(user);
 				setIsSignedIn(!!user);
-			} catch (error) {
-				console.error("Error getting user:", error);
+			} catch {
 				setUser(null);
 				setIsSignedIn(false);
 			} finally {

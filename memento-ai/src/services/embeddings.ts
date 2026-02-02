@@ -1,4 +1,3 @@
-// Embeddings service - ports embedding generation from ContentView.swift
 // Generates vector embeddings using OpenRouter API
 
 interface EmbeddingResponse {

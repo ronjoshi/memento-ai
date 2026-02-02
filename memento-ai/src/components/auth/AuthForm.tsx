@@ -1,6 +1,5 @@
 "use client";
 
-// AuthForm component - ports AuthView.swift functionality
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
