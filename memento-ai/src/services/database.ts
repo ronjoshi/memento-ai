@@ -61,7 +61,7 @@ export class DatabaseService {
           name,
           created_at
         )
-      `
+      `,
 			)
 			.eq("user_id", user.id);
 
@@ -87,7 +87,7 @@ export class DatabaseService {
 	async insertMemory(
 		memoryData: string,
 		tag: string,
-		embedding: number[]
+		embedding: number[],
 	): Promise<void> {
 		const {
 			data: { user },
@@ -137,7 +137,7 @@ export class DatabaseService {
 	}
 
 	async fetchConversationMessages(
-		conversationId: string
+		conversationId: string,
 	): Promise<ConversationMessage[]> {
 		const { data, error } = await this.supabase
 			.from("chat_entries")
@@ -163,7 +163,7 @@ export class DatabaseService {
 		conversationId: string,
 		role: "user" | "assistant",
 		content: string,
-		userId: string | null = null
+		userId: string | null = null,
 	): Promise<ConversationMessage> {
 		const {
 			data: { user },

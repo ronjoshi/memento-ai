@@ -27,7 +27,7 @@ export class EdgeFunctionService {
 				body: {
 					action: "summarizeMemories",
 				},
-			}
+			},
 		);
 
 		if (error) {
@@ -41,7 +41,7 @@ export class EdgeFunctionService {
 		query: string,
 		matchCount: number = 5,
 		startTime?: string,
-		endTime?: string
+		endTime?: string,
 	): Promise<SearchMemoriesResponse> {
 		if (!query || query.trim() === "") {
 			throw new Error("Query cannot be empty");
@@ -58,7 +58,7 @@ export class EdgeFunctionService {
 			"search-memories",
 			{
 				body: requestBody,
-			}
+			},
 		);
 
 		if (error) {

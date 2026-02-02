@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Production build
+build/
+dist/
+
+# Environment files
+.env
+.env.*
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+*.tsbuildinfo
+
+# Generated
+*.generated.*
+
+# iOS App (Swift/Xcode)
+../Memento AI/
+../Memento AI.xcodeproj/
+../Memento AITests/
+../Memento AIUITests/
