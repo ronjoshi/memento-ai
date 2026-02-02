@@ -5,12 +5,12 @@ import OpenAI from "openai";
 import { Memory, SearchRequest, RawSearchResult } from "../common/types.ts";
 
 // Initialize OpenAI client for embeddings
-const OPENROUTER_EMBEDDINGS_KEY =
+const OPENROUTER_OPENAI_EMBEDDINGS_KEY =
 	Deno.env.get("OPENROUTER_OPENAI_EMBEDDINGS_KEY") || "";
 
 const embeddingsClient = new OpenAI({
 	baseURL: "https://openrouter.ai/api/v1",
-	apiKey: OPENROUTER_EMBEDDINGS_KEY,
+	apiKey: OPENROUTER_OPENAI_EMBEDDINGS_KEY,
 	defaultHeaders: {},
 });
 
@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
 				{
 					status: 401,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
 				{
 					status: 401,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
 				{
 					status: 400,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
 				{
 					status: 500,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
 		// Call hybrid_search RPC function
 		const { data, error } = await supabase.rpc(
 			"hybrid_memory_search",
-			rpcParams
+			rpcParams,
 		);
 
 		if (error) {
@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
 				{
 					status: 500,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -154,7 +154,7 @@ Deno.serve(async (req) => {
 				tag: result.tag,
 				created_at: result.created_at,
 				embedding: result.embedding,
-			})
+			}),
 		);
 
 		// Return search results
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
 			}),
 			{
 				headers: { "Content-Type": "application/json" },
-			}
+			},
 		);
 	} catch (error) {
 		console.error("Error:", error);
@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
 			{
 				status: 500,
 				headers: { "Content-Type": "application/json" },
-			}
+			},
 		);
 	}
 });

@@ -1,11 +1,11 @@
 /// <reference lib="deno.ns" />
 
 import OpenAI from "openai";
-import { LLMModel, getModelIdentifier } from "../types/models.ts";
+import { LLMModel, getModelIdentifier } from "../../types/models.js";
 
 // Load environment variables for Deno
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY") || "";
-const OPENROUTER_EMBEDDINGS_KEY =
+const OPENROUTER_OPENAI_EMBEDDINGS_KEY =
 	Deno.env.get("OPENROUTER_OPENAI_EMBEDDINGS_KEY") || "";
 
 const chatClient = new OpenAI({
@@ -16,7 +16,7 @@ const chatClient = new OpenAI({
 
 const embeddingsClient = new OpenAI({
 	baseURL: "https://openrouter.ai/api/v1",
-	apiKey: OPENROUTER_EMBEDDINGS_KEY,
+	apiKey: OPENROUTER_OPENAI_EMBEDDINGS_KEY,
 	defaultHeaders: {},
 });
 
@@ -36,7 +36,7 @@ export class LLMService {
 
 	async chatCompletion(
 		messages: ChatMessage[],
-		config: LLMConfig = {}
+		config: LLMConfig = {},
 	): Promise<string> {
 		try {
 			const completion = await chatClient.chat.completions.create({

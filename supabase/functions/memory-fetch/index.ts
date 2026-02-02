@@ -1,7 +1,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
-import { llmService } from "../../../services/llmService.ts";
+import { llmService } from "../../services/llmService.js";
 import { Memory, Tag } from "../common/types.ts";
 
 interface MemoryWithTag extends Memory {
@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
 				{
 					status: 401,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
 				{
 					status: 401,
 					headers: { "Content-Type": "application/json" },
-				}
+				},
 			);
 		}
 
@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
 						}),
 						{
 							headers: { "Content-Type": "application/json" },
-						}
+						},
 					);
 				}
 
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
 				const memoryText = memories
 					.map(
 						(memory) =>
-							`Memory (${memory.tag}): ${memory.memory_data} [Created: ${memory.created_at}]`
+							`Memory (${memory.tag}): ${memory.memory_data} [Created: ${memory.created_at}]`,
 					)
 					.join("\n\n");
 
@@ -106,7 +106,7 @@ Summary:`;
 						}),
 						{
 							headers: { "Content-Type": "application/json" },
-						}
+						},
 					);
 				} catch (llmError) {
 					console.error("LLM Error:", llmError);
@@ -118,7 +118,7 @@ Summary:`;
 						{
 							status: 500,
 							headers: { "Content-Type": "application/json" },
-						}
+						},
 					);
 				}
 			}
@@ -129,7 +129,7 @@ Summary:`;
 					{
 						status: 400,
 						headers: { "Content-Type": "application/json" },
-					}
+					},
 				);
 		}
 	} catch (error) {
