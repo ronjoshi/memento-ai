@@ -24,22 +24,59 @@ export default function ChatPage() {
 			content,
 			createdAt: new Date().toISOString(),
 		};
-		setMessages((prev) => [...prev, userMessage]);
 
-		// Simulate a delay then add fake assistant response
-		await new Promise((resolve) => setTimeout(resolve, 500));
+		// Update state with user message
+		const updatedMessages = [...messages, userMessage];
+		setMessages(updatedMessages);
 
-		const assistantMessage: ConversationMessage = {
-			id: crypto.randomUUID(),
-			conversationId,
-			userId: null,
-			role: "assistant",
-			content: "Automated message",
-			createdAt: new Date().toISOString(),
-		};
-		setMessages((prev) => [...prev, assistantMessage]);
+		try {
+			// Prepare messages for LLM (only role and content needed)
+			const chatMessages = updatedMessages.map((msg) => ({
+				role: msg.role,
+				content: msg.content,
+			}));
 
-		setIsLoading(false);
+			// Call completion API
+			const response = await fetch("/api/chat/completion", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ messages: chatMessages }),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.error || "Failed to get response");
+			}
+
+			const data = await response.json();
+
+			// Add assistant response
+			const assistantMessage: ConversationMessage = {
+				id: crypto.randomUUID(),
+				conversationId,
+				userId: null,
+				role: "assistant",
+				content: data.content,
+				createdAt: new Date().toISOString(),
+			};
+			setMessages((prev) => [...prev, assistantMessage]);
+		} catch (error) {
+			console.error("Error sending message:", error);
+			// Show error message to user
+			const errorMessage: ConversationMessage = {
+				id: crypto.randomUUID(),
+				conversationId,
+				userId: null,
+				role: "assistant",
+				content: "Sorry, I encountered an error. Please try again.",
+				createdAt: new Date().toISOString(),
+			};
+			setMessages((prev) => [...prev, errorMessage]);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
