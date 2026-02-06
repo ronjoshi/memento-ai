@@ -2,7 +2,20 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
-import { Memory, SearchRequest, RawSearchResult } from "../common/types.ts";
+import { Memory, MemorySearchParams, RawSearchResult } from "../common/types.ts";
+
+/**
+ * Validates and formats an ISO 8601 timestamp string for PostgreSQL.
+ * Converts to format: YYYY-MM-DD HH:MM:SS (timestamp without time zone)
+ */
+function formatTimestampForPostgres(isoString: string): string {
+	const date = new Date(isoString);
+	if (isNaN(date.getTime())) {
+		throw new Error(`Invalid timestamp: ${isoString}`);
+	}
+	// Format as YYYY-MM-DD HH:MM:SS (PostgreSQL timestamp without time zone)
+	return date.toISOString().replace("T", " ").replace("Z", "").split(".")[0];
+}
 
 // Initialize OpenAI client for embeddings
 const OPENROUTER_OPENAI_EMBEDDINGS_KEY =
@@ -72,7 +85,7 @@ Deno.serve(async (req) => {
 			matchCount = 5,
 			startTime,
 			endTime,
-		}: SearchRequest = await req.json();
+		}: MemorySearchParams = await req.json();
 
 		if (!query || query.trim().length === 0) {
 			return new Response(
@@ -117,12 +130,36 @@ Deno.serve(async (req) => {
 			input_user_id: user.id,
 		};
 
-		// Add optional time filters if provided
+		// Add optional time filters if provided (validate and format for PostgreSQL)
 		if (startTime) {
-			rpcParams.start_time = startTime;
+			try {
+				rpcParams.start_time = formatTimestampForPostgres(startTime);
+			} catch {
+				return new Response(
+					JSON.stringify({
+						error: "Invalid startTime format. Use ISO 8601 (e.g., 2025-01-15T10:30:00Z).",
+					}),
+					{
+						status: 400,
+						headers: { "Content-Type": "application/json" },
+					},
+				);
+			}
 		}
 		if (endTime) {
-			rpcParams.end_time = endTime;
+			try {
+				rpcParams.end_time = formatTimestampForPostgres(endTime);
+			} catch {
+				return new Response(
+					JSON.stringify({
+						error: "Invalid endTime format. Use ISO 8601 (e.g., 2025-01-15T10:30:00Z).",
+					}),
+					{
+						status: 400,
+						headers: { "Content-Type": "application/json" },
+					},
+				);
+			}
 		}
 
 		// Call hybrid_search RPC function

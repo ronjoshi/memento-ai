@@ -1,3 +1,11 @@
+/**
+ * Client-side types for the Memento AI application.
+ *
+ * NOTE: These types use camelCase for JavaScript conventions.
+ * The edge function types in supabase/functions/common/types.ts use snake_case
+ * to match database column names. Keep these in sync when making changes.
+ */
+
 export interface Memory {
 	id: string;
 	userId: string;
@@ -39,12 +47,13 @@ export interface MemorySummaryResponse {
 	};
 }
 
-export interface SearchMemoriesRequest {
+export interface MemorySearchParams {
 	query: string;
 	matchCount?: number;
 	startTime?: string;
 	endTime?: string;
 }
+
 
 export interface SearchMemoriesResponse {
 	data: Memory[];

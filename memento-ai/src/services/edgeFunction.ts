@@ -2,7 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import {
 	MemorySummaryResponse,
 	SearchMemoriesResponse,
-	SearchMemoriesRequest,
+	MemorySearchParams,
 } from "@/types";
 
 export class EdgeFunctionService {
@@ -47,7 +47,7 @@ export class EdgeFunctionService {
 			throw new Error("Query cannot be empty");
 		}
 
-		const requestBody: SearchMemoriesRequest = {
+		const requestBody: MemorySearchParams = {
 			query,
 			matchCount,
 			startTime,
