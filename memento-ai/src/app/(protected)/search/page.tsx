@@ -20,7 +20,7 @@ export default function SearchPage() {
 		setQuery(searchQuery);
 
 		try {
-			const response = await fetch("/api/search", {
+			const response = await fetch("/api/search/keyword", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

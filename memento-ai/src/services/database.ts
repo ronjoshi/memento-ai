@@ -43,6 +43,52 @@ export class DatabaseService {
 		}));
 	}
 
+	async filterMemories(opts: {
+		tagIds?: number[];
+		startTime?: string;
+		endTime?: string;
+	}): Promise<Memory[]> {
+		const {
+			data: { user },
+		} = await this.supabase.auth.getUser();
+
+		if (!user) {
+			throw new Error("User not authenticated");
+		}
+
+		let query = this.supabase
+			.from("memories")
+			.select("id, user_id, memory_data, tag_ids, created_at, embedding")
+			.eq("user_id", user.id);
+
+		if (opts.startTime) {
+			query = query.gte("created_at", opts.startTime);
+		}
+		if (opts.endTime) {
+			query = query.lte("created_at", opts.endTime);
+		}
+		if (opts.tagIds && opts.tagIds.length > 0) {
+			query = query.overlaps("tag_ids", opts.tagIds);
+		}
+
+		const { data, error } = await query.order("created_at", {
+			ascending: false,
+		});
+
+		if (error) {
+			throw error;
+		}
+
+		return (data || []).map((item: any) => ({
+			id: item.id,
+			userId: item.user_id,
+			memoryData: item.memory_data,
+			tagIds: item.tag_ids || [],
+			createdAt: item.created_at,
+			embedding: item.embedding,
+		}));
+	}
+
 	async fetchMemoriesWithTags(): Promise<MemoryWithTag[]> {
 		const {
 			data: { user },
