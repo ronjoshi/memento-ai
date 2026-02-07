@@ -52,6 +52,17 @@ export interface ConversationMessage {
 	reasoning_content?: string;
 }
 
+// ============================================================================
+// LLM Types (shared between client and server)
+// ============================================================================
+
+export interface LLMResponse {
+	content: string | null;
+	reasoning_content?: string;
+	tool_calls?: ToolCall[];
+	finishReason: string | null;
+}
+
 export interface MemorySummaryResponse {
 	data: {
 		summary: string;

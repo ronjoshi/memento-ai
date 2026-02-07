@@ -2,18 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ConversationMessage, ToolCall } from "@/types";
+import { ConversationMessage, ToolCall, LLMResponse } from "@/types";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInput from "@/components/chat/ChatInput";
 import { executeTool } from "@/services/llm/functionCalls";
-
-// LLM Response type from the API
-interface LLMResponse {
-	content: string | null;
-	reasoning_content?: string;
-	tool_calls?: ToolCall[];
-	finishReason: string | null;
-}
 
 // Helper to convert LLM message format to ConversationMessage
 function createConversationMessage(

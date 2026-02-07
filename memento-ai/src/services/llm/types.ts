@@ -1,3 +1,8 @@
+import { ToolCall, LLMResponse } from "@/types";
+
+// Re-export shared types for convenience
+export type { ToolCall, LLMResponse };
+
 // ============================================================================
 // LLM Model Types
 // ============================================================================
@@ -31,15 +36,6 @@ export interface ChatMessage {
 	content: string | null;
 	reasoning_content?: string;
 	tool_calls?: ToolCall[];
-}
-
-export interface ToolCall {
-	id: string;
-	type: "function";
-	function: {
-		name: string;
-		arguments: string;
-	};
 }
 
 export interface ToolResultMessage {
@@ -89,13 +85,3 @@ export interface LLMConfig {
 		| { type: "function"; function: { name: string } };
 }
 
-// ============================================================================
-// Response Types
-// ============================================================================
-
-export interface LLMResponse {
-	content: string | null;
-	reasoning_content?: string;
-	tool_calls?: ToolCall[];
-	finishReason: string | null;
-}
