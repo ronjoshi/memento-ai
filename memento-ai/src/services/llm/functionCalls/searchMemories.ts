@@ -7,7 +7,7 @@ interface RawMemory {
 	id: string;
 	user_id: string;
 	memory_data: string;
-	tag: string;
+	tag_ids: number[];
 	created_at: string;
 	embedding?: number[];
 }
@@ -85,7 +85,7 @@ export async function executeSearchMemories(
 		const formattedMemories = rawData.map((memory) => ({
 			id: memory.id,
 			memoryData: memory.memory_data,
-			tag: memory.tag,
+			tagIds: memory.tag_ids || [],
 			createdAt: memory.created_at,
 			userId: memory.user_id,
 		}));
@@ -100,7 +100,9 @@ export async function executeSearchMemories(
 		return JSON.stringify({
 			success: false,
 			message:
-				error instanceof Error ? error.message : "Failed to search memories",
+				error instanceof Error
+					? error.message
+					: "Failed to search memories",
 			memories: [],
 		});
 	}

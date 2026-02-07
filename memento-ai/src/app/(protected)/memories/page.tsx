@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Memory } from "@/types";
+import { Memory, Tag, TagColor } from "@/types";
 import MemoryList from "@/components/memories/MemoryList";
 import AddMemoryModal from "@/components/memories/AddMemoryModal";
 
@@ -11,6 +11,7 @@ export default function MemoriesPage() {
 	const { signOut } = useAuth();
 	const router = useRouter();
 	const [memories, setMemories] = useState<Memory[]>([]);
+	const [tags, setTags] = useState<Tag[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [testResult, setTestResult] = useState<string | null>(null);
@@ -34,17 +35,33 @@ export default function MemoriesPage() {
 		}
 	}, []);
 
+	const loadTags = useCallback(async () => {
+		try {
+			const response = await fetch("/api/tags");
+
+			if (!response.ok) {
+				throw new Error("Failed to fetch tags");
+			}
+
+			const data = await response.json();
+			setTags(data.tags);
+		} catch (error) {
+			console.error("Error loading tags:", error);
+		}
+	}, []);
+
 	useEffect(() => {
 		loadMemories();
-	}, [loadMemories]);
+		loadTags();
+	}, [loadMemories, loadTags]);
 
-	const handleSaveMemory = async (memoryData: string, tag: string) => {
+	const handleSaveMemory = async (memoryData: string, tagIds: number[]) => {
 		const response = await fetch("/api/memories", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ memoryData, tag }),
+			body: JSON.stringify({ memoryData, tagIds }),
 		});
 
 		if (!response.ok) {
@@ -53,6 +70,41 @@ export default function MemoriesPage() {
 		}
 
 		await loadMemories();
+	};
+
+	const handleCreateTag = async (
+		name: string,
+		color: TagColor,
+	): Promise<Tag> => {
+		const response = await fetch("/api/tags", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ name, color }),
+		});
+
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.error || "Failed to create tag");
+		}
+
+		const data = await response.json();
+		setTags((prev) => [...prev, data.tag]);
+		return data.tag;
+	};
+
+	const handleDeleteTag = async (tagId: number): Promise<void> => {
+		const response = await fetch(`/api/tags/${tagId}`, {
+			method: "DELETE",
+		});
+
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.error || "Failed to delete tag");
+		}
+
+		setTags((prev) => prev.filter((tag) => tag.id !== tagId));
 	};
 
 	const handleTestEdge = async () => {
@@ -189,6 +241,9 @@ export default function MemoriesPage() {
 				isOpen={showAddModal}
 				onClose={() => setShowAddModal(false)}
 				onSave={handleSaveMemory}
+				availableTags={tags}
+				onCreateTag={handleCreateTag}
+				onDeleteTag={handleDeleteTag}
 			/>
 
 			{/* Test Result Modal */}

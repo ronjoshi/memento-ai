@@ -1,28 +1,41 @@
 "use client";
 
 import { useState } from "react";
+import { Tag, TagColor } from "@/types";
+import TagSelector from "@/components/tags/TagSelector";
 
 interface AddMemoryModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onSave: (memoryData: string, tag: string) => Promise<void>;
+	onSave: (memoryData: string, tagIds: number[]) => Promise<void>;
+	availableTags: Tag[];
+	onCreateTag: (name: string, color: TagColor) => Promise<Tag>;
+	onDeleteTag?: (tagId: number) => Promise<void>;
 }
 
 export default function AddMemoryModal({
 	isOpen,
 	onClose,
 	onSave,
+	availableTags,
+	onCreateTag,
+	onDeleteTag,
 }: AddMemoryModalProps) {
 	const [memoryText, setMemoryText] = useState("");
-	const [tagText, setTagText] = useState("");
+	const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
 	if (!isOpen) return null;
 
 	const handleSave = async () => {
-		if (!memoryText.trim() || !tagText.trim()) {
-			setError("Please enter both memory content and tag");
+		if (!memoryText.trim()) {
+			setError("Please enter memory content");
+			return;
+		}
+
+		if (selectedTagIds.length === 0) {
+			setError("Please select at least one tag");
 			return;
 		}
 
@@ -30,9 +43,9 @@ export default function AddMemoryModal({
 		setError("");
 
 		try {
-			await onSave(memoryText.trim(), tagText.trim());
+			await onSave(memoryText.trim(), selectedTagIds);
 			setMemoryText("");
-			setTagText("");
+			setSelectedTagIds([]);
 			onClose();
 		} catch (err) {
 			setError(
@@ -46,7 +59,7 @@ export default function AddMemoryModal({
 	const handleClose = () => {
 		if (!isLoading) {
 			setMemoryText("");
-			setTagText("");
+			setSelectedTagIds([]);
 			setError("");
 			onClose();
 		}
@@ -62,7 +75,7 @@ export default function AddMemoryModal({
 
 			{/* Modal */}
 			<div className="flex min-h-full items-center justify-center p-4">
-				<div className="relative w-full max-w-lg transform overflow-hidden rounded-2xl bg-card shadow-xl border border-card-border">
+				<div className="relative w-full max-w-lg transform rounded-2xl bg-card shadow-xl border border-card-border">
 					{/* Header */}
 					<div className="border-b border-border px-6 py-4">
 						<h3 className="text-lg font-semibold text-card-foreground">
@@ -92,18 +105,17 @@ export default function AddMemoryModal({
 
 						<div>
 							<label
-								htmlFor="memory-tag"
+								htmlFor="memory-tags"
 								className="block text-sm font-medium text-card-foreground mb-2"
 							>
-								Tag
+								Tags
 							</label>
-							<input
-								id="memory-tag"
-								type="text"
-								value={tagText}
-								onChange={(e) => setTagText(e.target.value)}
-								placeholder="e.g., work, personal, ideas"
-								className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground"
+							<TagSelector
+								availableTags={availableTags}
+								selectedTagIds={selectedTagIds}
+								onTagsChange={setSelectedTagIds}
+								onCreateTag={onCreateTag}
+								onDeleteTag={onDeleteTag}
 								disabled={isLoading}
 							/>
 						</div>

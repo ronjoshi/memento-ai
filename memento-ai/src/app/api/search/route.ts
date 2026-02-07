@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 			id: item.id,
 			userId: item.user_id,
 			memoryData: item.memory_data,
-			tag: item.tag,
+			tagIds: item.tag_ids || [],
 			createdAt: item.created_at,
 		}));
 
