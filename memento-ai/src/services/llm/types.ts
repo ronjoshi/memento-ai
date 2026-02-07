@@ -61,6 +61,7 @@ export interface FunctionDefinition {
 				type: string;
 				description?: string;
 				enum?: string[];
+				items?: { type: string };
 			}
 		>;
 		required?: string[];
@@ -84,4 +85,3 @@ export interface LLMConfig {
 		| "required"
 		| { type: "function"; function: { name: string } };
 }
-

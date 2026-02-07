@@ -1,18 +1,28 @@
 import { FunctionDefinition } from "@/services/llm";
 import {
-	SEARCH_MEMORIES_TOOL,
-	executeSearchMemories,
-	SearchMemoriesArgs,
-} from "./searchMemories";
+	SEARCH_BY_KEYWORD_TOOL,
+	executeSearchByKeyword,
+	SearchByKeywordArgs,
+} from "./searchByKeyword";
+import {
+	SEARCH_BY_TAG_TOOL,
+	executeSearchByTag,
+	SearchByTagArgs,
+} from "./searchByTag";
 
 // Re-export individual tools
-export { SEARCH_MEMORIES_TOOL, executeSearchMemories };
-export type { SearchMemoriesArgs };
+export { SEARCH_BY_KEYWORD_TOOL, executeSearchByKeyword };
+export type { SearchByKeywordArgs };
+export { SEARCH_BY_TAG_TOOL, executeSearchByTag };
+export type { SearchByTagArgs };
 
 /**
  * All available tools for the chat completion
  */
-export const ALL_TOOLS: FunctionDefinition[] = [SEARCH_MEMORIES_TOOL];
+export const ALL_TOOLS: FunctionDefinition[] = [
+	SEARCH_BY_KEYWORD_TOOL,
+	SEARCH_BY_TAG_TOOL,
+];
 
 /**
  * Tool executor map - maps tool names to their executor functions
@@ -20,8 +30,9 @@ export const ALL_TOOLS: FunctionDefinition[] = [SEARCH_MEMORIES_TOOL];
 export type ToolExecutor = (args: unknown) => Promise<string>;
 
 export const TOOL_EXECUTORS: Record<string, ToolExecutor> = {
-	search_memories: (args) =>
-		executeSearchMemories(args as SearchMemoriesArgs),
+	search_by_keyword: (args) =>
+		executeSearchByKeyword(args as SearchByKeywordArgs),
+	search_by_tag: (args) => executeSearchByTag(args as SearchByTagArgs),
 };
 
 /**
@@ -51,7 +62,9 @@ export async function executeTool(
 		return JSON.stringify({
 			success: false,
 			message:
-				error instanceof Error ? error.message : "Failed to execute tool",
+				error instanceof Error
+					? error.message
+					: "Failed to execute tool",
 		});
 	}
 }

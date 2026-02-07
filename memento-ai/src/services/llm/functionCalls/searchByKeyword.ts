@@ -13,12 +13,12 @@ interface RawMemory {
 }
 
 /**
- * Tool definition for searching user memories
+ * Tool definition for searching user memories by keyword (semantic search)
  */
-export const SEARCH_MEMORIES_TOOL: FunctionDefinition = {
-	name: "search_memories",
+export const SEARCH_BY_KEYWORD_TOOL: FunctionDefinition = {
+	name: "search_by_keyword",
 	description:
-		"Search the user's memories for relevant information. Use this when the user asks about their past experiences, events, or stored information.",
+		"Search the user's memories using semantic/keyword search. Use this when the user asks about their past experiences, events, or stored information using natural language queries.",
 	parameters: {
 		type: "object",
 		properties: {
@@ -42,21 +42,21 @@ export const SEARCH_MEMORIES_TOOL: FunctionDefinition = {
 };
 
 /**
- * Arguments for the search_memories function
+ * Arguments for the search_by_keyword function
  */
-export interface SearchMemoriesArgs {
+export interface SearchByKeywordArgs {
 	query: string;
 	startTime?: string;
 	endTime?: string;
 }
 
 /**
- * Execute the search_memories tool
+ * Execute the search_by_keyword tool
  * @param args - The parsed arguments from the tool call
  * @returns A string representation of the search results
  */
-export async function executeSearchMemories(
-	args: SearchMemoriesArgs,
+export async function executeSearchByKeyword(
+	args: SearchByKeywordArgs,
 ): Promise<string> {
 	try {
 		const supabase = getSupabaseBrowserClient();
@@ -96,7 +96,7 @@ export async function executeSearchMemories(
 			memories: formattedMemories,
 		});
 	} catch (error) {
-		console.error("Error executing search_memories:", error);
+		console.error("Error executing search_by_keyword:", error);
 		return JSON.stringify({
 			success: false,
 			message:
