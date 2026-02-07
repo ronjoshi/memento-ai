@@ -31,13 +31,25 @@ export interface MemoryWithTag {
 	tags: Tag[];
 }
 
+export interface ToolCall {
+	id: string;
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+	};
+}
+
 export interface ConversationMessage {
 	id: string;
 	conversationId: string;
 	userId: string | null;
-	role: "user" | "assistant";
-	content: string;
+	role: "user" | "assistant" | "tool";
+	content: string | null;
 	createdAt: string;
+	tool_calls?: ToolCall[];
+	tool_call_id?: string;
+	reasoning_content?: string;
 }
 
 export interface MemorySummaryResponse {
@@ -53,7 +65,6 @@ export interface MemorySearchParams {
 	startTime?: string;
 	endTime?: string;
 }
-
 
 export interface SearchMemoriesResponse {
 	data: Memory[];

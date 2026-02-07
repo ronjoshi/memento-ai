@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { chatCompletion, ChatMessage, LLMModel } from "@/services/llm";
+import { chatCompletion } from "@/services/llm";
+import { validateMessages, validateModel } from "@/services/llm/validation";
+import { ALL_TOOLS } from "@/services/llm/functionCalls";
 
 export async function POST(request: NextRequest) {
 	const supabase = await createClient();
@@ -14,50 +16,26 @@ export async function POST(request: NextRequest) {
 	}
 
 	try {
-		const { messages, model, temperature, maxTokens } = await request.json();
+		const { messages, model, temperature, maxTokens, reasoning } =
+			await request.json();
 
-		if (!messages || !Array.isArray(messages) || messages.length === 0) {
-			return NextResponse.json(
-				{ error: "messages array is required" },
-				{ status: 400 },
-			);
-		}
+		// Validate messages using shared validation utility
+		const validatedMessages = validateMessages(messages);
 
-		// Validate message format
-		const validatedMessages: ChatMessage[] = messages.map(
-			(msg: { role?: string; content?: string }) => {
-				if (!msg.role || !msg.content) {
-					throw new Error("Each message must have role and content");
-				}
-				if (!["user", "assistant", "system"].includes(msg.role)) {
-					throw new Error("Invalid message role");
-				}
-				return {
-					role: msg.role as "user" | "assistant" | "system",
-					content: String(msg.content),
-				};
-			},
-		);
+		// Validate model using shared validation utility
+		const validatedModel = validateModel(model);
 
-		// Validate model if provided
-		let validatedModel: LLMModel | undefined;
-		if (model) {
-			if (!Object.values(LLMModel).includes(model)) {
-				return NextResponse.json(
-					{ error: `Invalid model. Valid options: ${Object.values(LLMModel).join(", ")}` },
-					{ status: 400 },
-				);
-			}
-			validatedModel = model as LLMModel;
-		}
-
+		// Make single LLM call with tools - client handles the tool execution loop
 		const response = await chatCompletion(validatedMessages, {
 			model: validatedModel,
 			temperature,
 			maxTokens,
+			reasoning,
+			tools: ALL_TOOLS,
+			toolChoice: "auto",
 		});
 
-		return NextResponse.json({ content: response });
+		return NextResponse.json(response);
 	} catch (error) {
 		console.error("Chat completion error:", error);
 		return NextResponse.json(
