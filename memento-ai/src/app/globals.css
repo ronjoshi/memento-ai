@@ -104,14 +104,13 @@
 	--color-error-light: var(--error-light);
 	--color-info: var(--info);
 	--color-info-light: var(--info-light);
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
+	--font-sans: var(--font-avenir);
+	--font-mono: ui-monospace, monospace;
 }
 
 body {
 	background: var(--background);
 	color: var(--foreground);
-	font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 /* Smooth transitions for theme changes */
