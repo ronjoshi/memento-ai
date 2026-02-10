@@ -157,7 +157,7 @@ export default function MemoriesPage() {
 
 						<div className="flex items-center space-x-3">
 							<button
-								onClick={() => router.push("/search")}
+								onClick={() => router.push("/app/search")}
 								className="p-2 text-muted-foreground hover:text-primary transition-colors"
 								title="Search"
 							>
@@ -177,7 +177,7 @@ export default function MemoriesPage() {
 							</button>
 
 							<button
-								onClick={() => router.push("/chat")}
+								onClick={() => router.push("/app/chat")}
 								className="p-2 text-muted-foreground hover:text-primary transition-colors"
 								title="Chat"
 							>

@@ -38,7 +38,7 @@ export default function AuthForm() {
 				console.log("AuthForm: Sign in completed successfully");
 			}
 			// Redirect to memories page after successful auth
-			router.push("/memories");
+			router.push("/app/memories");
 		} catch (err) {
 			console.error("AuthForm: Auth error:", err);
 			setError(err instanceof Error ? err.message : "An error occurred");
