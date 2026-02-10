@@ -6,13 +6,11 @@ import MemoryCard from "./MemoryCard";
 interface MemoryListProps {
 	memories: Memory[];
 	isLoading: boolean;
-	onRefresh?: () => void;
 }
 
 export default function MemoryList({
 	memories,
 	isLoading,
-	onRefresh,
 }: MemoryListProps) {
 	if (isLoading) {
 		return (
@@ -64,14 +62,6 @@ export default function MemoryList({
 
 	return (
 		<div className="space-y-4">
-			{onRefresh && (
-				<button
-					onClick={onRefresh}
-					className="w-full py-2 text-sm text-primary hover:text-primary-hover transition-colors"
-				>
-					Tap to refresh
-				</button>
-			)}
 			{memories.map((memory) => (
 				<MemoryCard key={memory.id} memory={memory} />
 			))}
