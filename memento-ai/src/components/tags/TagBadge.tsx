@@ -21,8 +21,8 @@ export default function TagBadge({
 		<span
 			className={`inline-flex items-center gap-1 rounded-md font-medium ${sizeClasses}`}
 			style={{
-				backgroundColor: `var(--tag-bg-${tag.color}, ${colors.bg})`,
-				color: `var(--tag-text-${tag.color}, ${colors.text})`,
+				backgroundColor: colors.bg,
+				color: colors.text,
 			}}
 		>
 			{tag.name}

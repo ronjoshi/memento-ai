@@ -180,7 +180,7 @@ export default function ChatPage() {
 							Back
 						</button>
 
-						<h1 className="text-xl font-bold text-foreground">Chat</h1>
+						<h1 className="text-xl font-bold text-primary">Chat</h1>
 
 						<div className="w-16"></div>
 					</div>

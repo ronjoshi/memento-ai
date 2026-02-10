@@ -1,83 +1,46 @@
 @import "tailwindcss";
 
 :root {
-	/* Base colors */
-	--background: #f8fafc;
-	--foreground: #0f172a;
+	/* Base colors - Super dark mode */
+	--background: #050505;
+	--foreground: #ffffff;
 
 	/* Card & Surface */
-	--card: #ffffff;
-	--card-foreground: #0f172a;
-	--card-border: #e2e8f0;
+	--card: #0a0a0a;
+	--card-foreground: #ffffff;
+	--card-border: #164e63;
 
-	/* Primary (Amber) */
-	--primary: #f59e0b;
-	--primary-hover: #d97706;
-	--primary-light: #fef3c7;
-	--primary-foreground: #ffffff;
+	/* Primary (Cyan) */
+	--primary: #22d3ee;
+	--primary-hover: #06b6d4;
+	--primary-light: #0a1a1f;
+	--primary-foreground: #050505;
 
-	/* Secondary (Slate) */
-	--secondary: #64748b;
-	--secondary-hover: #475569;
-	--secondary-foreground: #f8fafc;
+	/* Secondary */
+	--secondary: #6b7280;
+	--secondary-hover: #9ca3af;
+	--secondary-foreground: #050505;
 
 	/* Muted */
-	--muted: #f1f5f9;
-	--muted-foreground: #64748b;
+	--muted: #111111;
+	--muted-foreground: #67e8f9;
 
 	/* Accent */
-	--accent: #fef3c7;
-	--accent-foreground: #92400e;
+	--accent: #0a1a1f;
+	--accent-foreground: #22d3ee;
 
 	/* Status Colors */
-	--success: #10b981;
-	--success-light: #d1fae5;
-	--error: #f43f5e;
-	--error-light: #ffe4e6;
-	--info: #0ea5e9;
-	--info-light: #e0f2fe;
+	--success: #34d399;
+	--success-light: #052e21;
+	--error: #fb7185;
+	--error-light: #2a0a10;
+	--info: #22d3ee;
+	--info-light: #0a1a1f;
 
 	/* Borders & Rings */
-	--border: #e2e8f0;
-	--ring: #f59e0b;
-	--ring-offset: #ffffff;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0f172a;
-		--foreground: #f1f5f9;
-
-		--card: #1e293b;
-		--card-foreground: #f1f5f9;
-		--card-border: #334155;
-
-		--primary: #fbbf24;
-		--primary-hover: #f59e0b;
-		--primary-light: #422006;
-		--primary-foreground: #0f172a;
-
-		--secondary: #94a3b8;
-		--secondary-hover: #cbd5e1;
-		--secondary-foreground: #0f172a;
-
-		--muted: #1e293b;
-		--muted-foreground: #94a3b8;
-
-		--accent: #422006;
-		--accent-foreground: #fbbf24;
-
-		--success: #34d399;
-		--success-light: #064e3b;
-		--error: #fb7185;
-		--error-light: #4c0519;
-		--info: #38bdf8;
-		--info-light: #0c4a6e;
-
-		--border: #334155;
-		--ring: #fbbf24;
-		--ring-offset: #0f172a;
-	}
+	--border: #164e63;
+	--ring: #22d3ee;
+	--ring-offset: #050505;
 }
 
 @theme inline {
@@ -111,22 +74,6 @@
 body {
 	background: var(--background);
 	color: var(--foreground);
-}
-
-/* Smooth transitions for theme changes */
-* {
-	transition:
-		background-color 0.15s ease,
-		border-color 0.15s ease,
-		color 0.15s ease;
-}
-
-/* Disable transitions for elements that shouldn't animate */
-*:focus,
-input,
-textarea,
-button {
-	transition: none;
 }
 
 /* Custom scrollbar */

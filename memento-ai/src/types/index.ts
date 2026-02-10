@@ -18,64 +18,46 @@ export type TagColor =
 	| "pink"
 	| "red";
 
-// Tag color configuration for UI styling (light and dark mode)
+// Tag color configuration for UI styling (dark mode optimized)
 export const TAG_COLOR_CONFIG: Record<
 	TagColor,
-	{ bg: string; text: string; bgDark: string; textDark: string }
+	{ bg: string; text: string }
 > = {
 	gray: {
-		bg: "#f1f5f9",
-		text: "#475569",
-		bgDark: "#334155",
-		textDark: "#cbd5e1",
+		bg: "#374151",
+		text: "#f3f4f6",
 	},
 	brown: {
-		bg: "#fef3c7",
-		text: "#92400e",
-		bgDark: "#422006",
-		textDark: "#fbbf24",
+		bg: "#78350f",
+		text: "#fef3c7",
 	},
 	orange: {
-		bg: "#ffedd5",
-		text: "#c2410c",
-		bgDark: "#431407",
-		textDark: "#fb923c",
+		bg: "#c2410c",
+		text: "#fff7ed",
 	},
 	yellow: {
-		bg: "#fef9c3",
-		text: "#a16207",
-		bgDark: "#422006",
-		textDark: "#facc15",
+		bg: "#a16207",
+		text: "#fefce8",
 	},
 	green: {
-		bg: "#dcfce7",
-		text: "#166534",
-		bgDark: "#14532d",
-		textDark: "#4ade80",
+		bg: "#15803d",
+		text: "#f0fdf4",
 	},
 	blue: {
-		bg: "#dbeafe",
-		text: "#1d4ed8",
-		bgDark: "#1e3a8a",
-		textDark: "#60a5fa",
+		bg: "#1d4ed8",
+		text: "#eff6ff",
 	},
 	purple: {
-		bg: "#f3e8ff",
-		text: "#7c3aed",
-		bgDark: "#4c1d95",
-		textDark: "#a78bfa",
+		bg: "#7c3aed",
+		text: "#f5f3ff",
 	},
 	pink: {
-		bg: "#fce7f3",
-		text: "#be185d",
-		bgDark: "#831843",
-		textDark: "#f472b6",
+		bg: "#be185d",
+		text: "#fdf2f8",
 	},
 	red: {
-		bg: "#fee2e2",
-		text: "#dc2626",
-		bgDark: "#7f1d1d",
-		textDark: "#f87171",
+		bg: "#dc2626",
+		text: "#fef2f2",
 	},
 };
 

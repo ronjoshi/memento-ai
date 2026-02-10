@@ -22,9 +22,9 @@ export default function ColorPicker({
 						key={color}
 						type="button"
 						onClick={() => onSelect(color)}
-						className={`w-8 h-8 rounded-md border-2 transition-all ${
+						className={`w-8 h-8 rounded-full border-2 transition-all ${
 							isSelected
-								? "border-foreground scale-110"
+								? "border-white scale-110"
 								: "border-transparent hover:scale-105"
 						}`}
 						style={{
