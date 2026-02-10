@@ -6,11 +6,15 @@ import MemoryCard from "./MemoryCard";
 interface MemoryListProps {
 	memories: Memory[];
 	isLoading: boolean;
+	onEdit?: (memory: Memory) => void;
+	onDelete?: (memory: Memory) => void;
 }
 
 export default function MemoryList({
 	memories,
 	isLoading,
+	onEdit,
+	onDelete,
 }: MemoryListProps) {
 	if (isLoading) {
 		return (
@@ -63,7 +67,12 @@ export default function MemoryList({
 	return (
 		<div className="space-y-4">
 			{memories.map((memory) => (
-				<MemoryCard key={memory.id} memory={memory} />
+				<MemoryCard
+					key={memory.id}
+					memory={memory}
+					onEdit={onEdit}
+					onDelete={onDelete}
+				/>
 			))}
 		</div>
 	);

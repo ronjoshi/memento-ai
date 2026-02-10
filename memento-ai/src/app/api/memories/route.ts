@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const { memoryData, tagIds } = await request.json();
+		const { memoryData, tagIds, createdAt } = await request.json();
 
 		if (!memoryData) {
 			return NextResponse.json(
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
 				memory_data: memoryData,
 				tag_ids: tagIds,
 				embedding: embedding,
-				created_at: new Date().toISOString(),
+				created_at: createdAt || new Date().toISOString(),
 			})
 			.select()
 			.single();

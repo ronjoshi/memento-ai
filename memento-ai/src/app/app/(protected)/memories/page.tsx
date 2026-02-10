@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Memory, Tag, TagColor } from "@/types";
 import MemoryList from "@/components/memories/MemoryList";
-import AddMemoryModal from "@/components/memories/AddMemoryModal";
+import MemoryModal from "@/components/memories/MemoryModal";
 
 export default function MemoriesPage() {
 	const { signOut } = useAuth();
@@ -13,7 +13,8 @@ export default function MemoriesPage() {
 	const [memories, setMemories] = useState<Memory[]>([]);
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [showAddModal, setShowAddModal] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
 
 	const loadMemories = useCallback(async () => {
 		try {
@@ -53,21 +54,75 @@ export default function MemoriesPage() {
 		loadTags();
 	}, [loadMemories, loadTags]);
 
-	const handleSaveMemory = async (memoryData: string, tagIds: number[]) => {
-		const response = await fetch("/api/memories", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ memoryData, tagIds }),
-		});
+	const handleSaveMemory = async (memoryData: string, tagIds: number[], createdAt?: string) => {
+		if (editingMemory) {
+			// Update existing memory
+			const response = await fetch(`/api/memories/${editingMemory.id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ memoryData, tagIds, createdAt }),
+			});
 
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.error || "Failed to save memory");
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.error || "Failed to update memory");
+			}
+		} else {
+			// Create new memory
+			const response = await fetch("/api/memories", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ memoryData, tagIds, createdAt }),
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.error || "Failed to save memory");
+			}
 		}
 
 		await loadMemories();
+	};
+
+	const handleEditMemory = (memory: Memory) => {
+		setEditingMemory(memory);
+		setShowModal(true);
+	};
+
+	const handleDeleteMemory = async (memory: Memory) => {
+		if (!confirm("Are you sure you want to delete this memory?")) {
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/memories/${memory.id}`, {
+				method: "DELETE",
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.error || "Failed to delete memory");
+			}
+
+			await loadMemories();
+		} catch (error) {
+			console.error("Error deleting memory:", error);
+			alert(error instanceof Error ? error.message : "Failed to delete memory");
+		}
+	};
+
+	const handleCloseModal = () => {
+		setShowModal(false);
+		setEditingMemory(null);
+	};
+
+	const handleOpenAddModal = () => {
+		setEditingMemory(null);
+		setShowModal(true);
 	};
 
 	const handleCreateTag = async (
@@ -142,7 +197,7 @@ export default function MemoriesPage() {
 							</button>
 
 							<button
-								onClick={() => setShowAddModal(true)}
+								onClick={handleOpenAddModal}
 								className="p-2 text-muted-foreground hover:text-primary transition-colors"
 								title="Add Memory"
 							>
@@ -190,17 +245,20 @@ export default function MemoriesPage() {
 				<MemoryList
 					memories={memories}
 					isLoading={isLoading}
+					onEdit={handleEditMemory}
+					onDelete={handleDeleteMemory}
 				/>
 			</main>
 
-			{/* Add Memory Modal */}
-			<AddMemoryModal
-				isOpen={showAddModal}
-				onClose={() => setShowAddModal(false)}
+			{/* Memory Modal */}
+			<MemoryModal
+				isOpen={showModal}
+				onClose={handleCloseModal}
 				onSave={handleSaveMemory}
 				availableTags={tags}
 				onCreateTag={handleCreateTag}
 				onDeleteTag={handleDeleteTag}
+				editingMemory={editingMemory}
 			/>
 		</div>
 	);

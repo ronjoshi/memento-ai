@@ -1,30 +1,57 @@
 "use client";
 
-import { useState } from "react";
-import { Tag, TagColor } from "@/types";
+import { useState, useEffect } from "react";
+import { Memory, Tag, TagColor } from "@/types";
 import TagSelector from "@/components/tags/TagSelector";
 
-interface AddMemoryModalProps {
+interface MemoryModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onSave: (memoryData: string, tagIds: number[]) => Promise<void>;
+	onSave: (memoryData: string, tagIds: number[], createdAt?: string) => Promise<void>;
 	availableTags: Tag[];
 	onCreateTag: (name: string, color: TagColor) => Promise<Tag>;
 	onDeleteTag?: (tagId: number) => Promise<void>;
+	editingMemory?: Memory | null;
 }
 
-export default function AddMemoryModal({
+export default function MemoryModal({
 	isOpen,
 	onClose,
 	onSave,
 	availableTags,
 	onCreateTag,
 	onDeleteTag,
-}: AddMemoryModalProps) {
+	editingMemory,
+}: MemoryModalProps) {
 	const [memoryText, setMemoryText] = useState("");
 	const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+	const [selectedDate, setSelectedDate] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+
+	const isEditing = !!editingMemory;
+
+	// Reset form when modal opens or editingMemory changes
+	useEffect(() => {
+		if (isOpen) {
+			if (editingMemory) {
+				setMemoryText(editingMemory.memoryData);
+				setSelectedTagIds(editingMemory.tagIds || []);
+				// Convert ISO string to local datetime-local format
+				const date = new Date(editingMemory.createdAt);
+				const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+				setSelectedDate(localDate.toISOString().slice(0, 16));
+			} else {
+				setMemoryText("");
+				setSelectedTagIds([]);
+				// Default to current date/time
+				const now = new Date();
+				const localNow = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+				setSelectedDate(localNow.toISOString().slice(0, 16));
+			}
+			setError("");
+		}
+	}, [isOpen, editingMemory]);
 
 	if (!isOpen) return null;
 
@@ -43,7 +70,9 @@ export default function AddMemoryModal({
 		setError("");
 
 		try {
-			await onSave(memoryText.trim(), selectedTagIds);
+			// Convert local datetime to ISO string
+			const createdAt = selectedDate ? new Date(selectedDate).toISOString() : undefined;
+			await onSave(memoryText.trim(), selectedTagIds, createdAt);
 			setMemoryText("");
 			setSelectedTagIds([]);
 			onClose();
@@ -79,7 +108,7 @@ export default function AddMemoryModal({
 					{/* Header */}
 					<div className="border-b border-border px-6 py-4">
 						<h3 className="text-lg font-semibold text-card-foreground">
-							Add Memory
+							{isEditing ? "Edit Memory" : "Add Memory"}
 						</h3>
 					</div>
 
@@ -94,11 +123,28 @@ export default function AddMemoryModal({
 							</label>
 							<textarea
 								id="memory-content"
-								rows={4}
+								rows={10}
 								value={memoryText}
 								onChange={(e) => setMemoryText(e.target.value)}
 								placeholder="What do you want to remember?"
-								className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground resize-none"
+								className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground resize-y min-h-[200px]"
+								disabled={isLoading}
+							/>
+						</div>
+
+						<div>
+							<label
+								htmlFor="memory-date"
+								className="block text-sm font-medium text-card-foreground mb-2"
+							>
+								Date
+							</label>
+							<input
+								id="memory-date"
+								type="datetime-local"
+								value={selectedDate}
+								onChange={(e) => setSelectedDate(e.target.value)}
+								className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
 								disabled={isLoading}
 							/>
 						</div>
@@ -148,6 +194,8 @@ export default function AddMemoryModal({
 									<div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground border-t-transparent mr-2"></div>
 									Saving...
 								</>
+							) : isEditing ? (
+								"Save Changes"
 							) : (
 								"Save Memory"
 							)}
