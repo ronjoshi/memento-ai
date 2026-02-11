@@ -16,10 +16,10 @@ export default function MemoryCard({ memory, onEdit, onDelete }: MemoryCardProps
 	return (
 		<div className="bg-card rounded-xl shadow-sm border border-card-border p-4 hover:shadow-md hover:border-primary/20 transition-all duration-200 group">
 			<div className="flex justify-between items-start gap-2">
-				<p className="text-card-foreground text-base leading-relaxed mb-3 flex-1">
+				<p className="text-card-foreground text-base leading-relaxed mb-3 flex-1 line-clamp-3">
 					{memory.memoryData}
 				</p>
-				<div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+				<div className="flex items-center gap-1">
 					{onEdit && (
 						<button
 							onClick={() => onEdit(memory)}

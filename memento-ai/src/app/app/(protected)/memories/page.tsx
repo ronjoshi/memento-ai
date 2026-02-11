@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Memory, Tag, TagColor } from "@/types";
 import MemoryList from "@/components/memories/MemoryList";
 import MemoryModal from "@/components/memories/MemoryModal";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function MemoriesPage() {
 	const { signOut } = useAuth();
@@ -15,6 +16,8 @@ export default function MemoriesPage() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
+	const [deletingMemory, setDeletingMemory] = useState<Memory | null>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const loadMemories = useCallback(async () => {
 		try {
@@ -93,13 +96,16 @@ export default function MemoriesPage() {
 		setShowModal(true);
 	};
 
-	const handleDeleteMemory = async (memory: Memory) => {
-		if (!confirm("Are you sure you want to delete this memory?")) {
-			return;
-		}
+	const handleDeleteMemory = (memory: Memory) => {
+		setDeletingMemory(memory);
+	};
 
+	const confirmDeleteMemory = async () => {
+		if (!deletingMemory) return;
+
+		setIsDeleting(true);
 		try {
-			const response = await fetch(`/api/memories/${memory.id}`, {
+			const response = await fetch(`/api/memories/${deletingMemory.id}`, {
 				method: "DELETE",
 			});
 
@@ -109,9 +115,11 @@ export default function MemoriesPage() {
 			}
 
 			await loadMemories();
+			setDeletingMemory(null);
 		} catch (error) {
 			console.error("Error deleting memory:", error);
-			alert(error instanceof Error ? error.message : "Failed to delete memory");
+		} finally {
+			setIsDeleting(false);
 		}
 	};
 
@@ -259,6 +267,18 @@ export default function MemoriesPage() {
 				onCreateTag={handleCreateTag}
 				onDeleteTag={handleDeleteTag}
 				editingMemory={editingMemory}
+			/>
+
+			{/* Delete Confirmation Modal */}
+			<ConfirmModal
+				isOpen={!!deletingMemory}
+				title="Delete Memory"
+				message="Are you sure you want to delete this memory? This action cannot be undone."
+				confirmText="Delete"
+				cancelText="Cancel"
+				onConfirm={confirmDeleteMemory}
+				onCancel={() => setDeletingMemory(null)}
+				isLoading={isDeleting}
 			/>
 		</div>
 	);
