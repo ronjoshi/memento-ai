@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { DisplayMessage } from "@/types";
 import { formatDate } from "@/utils/date";
 import MemoryPill from "./MemoryPill";
@@ -12,9 +13,22 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 	const isUser = message.role === "user";
 	const hasMemories =
 		message.attachedMemories && message.attachedMemories.length > 0;
+	const [isVisible, setIsVisible] = useState(false);
+
+	useEffect(() => {
+		// Trigger animation on mount
+		const timer = setTimeout(() => setIsVisible(true), 10);
+		return () => clearTimeout(timer);
+	}, []);
 
 	return (
-		<div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+		<div
+			className={`flex ${isUser ? "justify-end" : "justify-start"} transition-all duration-200 ease-out`}
+			style={{
+				opacity: isVisible ? 1 : 0,
+				transform: isVisible ? "translateY(0)" : "translateY(5px)",
+			}}
+		>
 			<div
 				className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[80%]`}
 			>
