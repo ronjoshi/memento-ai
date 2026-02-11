@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { ConversationMessage } from "@/types";
+import { processMessagesForDisplay } from "@/utils/messageProcessor";
 import ChatMessage from "./ChatMessage";
 
 interface ChatMessageListProps {
@@ -15,11 +16,18 @@ export default function ChatMessageList({
 }: ChatMessageListProps) {
 	const bottomRef = useRef<HTMLDivElement>(null);
 
+	// Process messages: filter out tool messages and empty assistant messages,
+	// attach memory references to assistant responses
+	const displayMessages = useMemo(
+		() => processMessagesForDisplay(messages),
+		[messages],
+	);
+
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
-	if (messages.length === 0 && !isLoading) {
+	if (displayMessages.length === 0 && !isLoading) {
 		return (
 			<div className="flex-1 flex items-center justify-center">
 				<div className="text-center">
@@ -47,7 +55,7 @@ export default function ChatMessageList({
 
 	return (
 		<div className="flex-1 overflow-y-auto p-4 space-y-4">
-			{messages.map((message) => (
+			{displayMessages.map((message) => (
 				<ChatMessage key={message.id} message={message} />
 			))}
 			{isLoading && (

@@ -161,3 +161,15 @@ export interface AuthState {
 	isLoading: boolean;
 	isSignedIn: boolean;
 }
+
+// Memory reference extracted from tool results for display
+export interface MemoryReference {
+	id: string;
+	memoryData: string;
+	createdAt: string;
+}
+
+// Processed message for display (enriched ConversationMessage)
+export interface DisplayMessage extends ConversationMessage {
+	attachedMemories?: MemoryReference[];
+}
