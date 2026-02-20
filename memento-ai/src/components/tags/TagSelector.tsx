@@ -26,7 +26,8 @@ export default function TagSelector({
 	const [isCreating, setIsCreating] = useState(false);
 	const [newTagName, setNewTagName] = useState("");
 	const [newTagColor, setNewTagColor] = useState<TagColor>("blue");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isCreateLoading, setIsCreateLoading] = useState(false);
+	const [deletingTagId, setDeletingTagId] = useState<number | null>(null);
 	const [searchQuery, setSearchQuery] = useState("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -67,9 +68,9 @@ export default function TagSelector({
 	};
 
 	const handleCreateTag = async () => {
-		if (!newTagName.trim() || isLoading) return;
+		if (!newTagName.trim() || isCreateLoading) return;
 
-		setIsLoading(true);
+		setIsCreateLoading(true);
 		try {
 			const newTag = await onCreateTag(newTagName.trim(), newTagColor);
 			onTagsChange([...selectedTagIds, newTag.id]);
@@ -79,15 +80,15 @@ export default function TagSelector({
 		} catch (error) {
 			console.error("Failed to create tag:", error);
 		} finally {
-			setIsLoading(false);
+			setIsCreateLoading(false);
 		}
 	};
 
 	const handleDeleteTag = async (e: React.MouseEvent, tagId: number) => {
 		e.stopPropagation();
-		if (!onDeleteTag || isLoading) return;
+		if (!onDeleteTag || deletingTagId !== null) return;
 
-		setIsLoading(true);
+		setDeletingTagId(tagId);
 		try {
 			await onDeleteTag(tagId);
 			// Remove from selected if it was selected
@@ -97,7 +98,7 @@ export default function TagSelector({
 		} catch (error) {
 			console.error("Failed to delete tag:", error);
 		} finally {
-			setIsLoading(false);
+			setDeletingTagId(null);
 		}
 	};
 
@@ -143,10 +144,11 @@ export default function TagSelector({
 					</div>
 
 					{/* Tags list */}
-					<div className="max-h-48 overflow-y-auto p-2">
+					<div className={`max-h-48 overflow-y-auto p-2 ${isCreateLoading ? "opacity-50 pointer-events-none" : ""}`}>
 						{filteredTags.length > 0 ? (
 							filteredTags.map((tag) => {
 								const isSelected = selectedTagIds.includes(tag.id);
+								const isBeingDeleted = deletingTagId === tag.id;
 								const colors = TAG_COLOR_CONFIG[tag.color];
 
 								return (
@@ -154,10 +156,13 @@ export default function TagSelector({
 										key={tag.id}
 										type="button"
 										onClick={() => toggleTag(tag.id)}
+										disabled={isBeingDeleted}
 										className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
-											isSelected
-												? "bg-accent"
-												: "hover:bg-secondary/10"
+											isBeingDeleted
+												? "opacity-50 pointer-events-none"
+												: isSelected
+													? "bg-accent"
+													: "hover:bg-secondary/10"
 										}`}
 									>
 										<span
@@ -186,22 +191,27 @@ export default function TagSelector({
 											<button
 												type="button"
 												onClick={(e) => handleDeleteTag(e, tag.id)}
+												disabled={isBeingDeleted}
 												className="p-1 text-muted-foreground hover:text-error rounded transition-colors"
 												title="Delete tag"
 											>
-												<svg
-													className="w-3.5 h-3.5"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke="currentColor"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth={2}
-														d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-													/>
-												</svg>
+												{isBeingDeleted ? (
+													<div className="w-3.5 h-3.5 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+												) : (
+													<svg
+														className="w-3.5 h-3.5"
+														fill="none"
+														viewBox="0 0 24 24"
+														stroke="currentColor"
+													>
+														<path
+															strokeLinecap="round"
+															strokeLinejoin="round"
+															strokeWidth={2}
+															d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+														/>
+													</svg>
+												)}
 											</button>
 										)}
 									</button>
@@ -250,10 +260,10 @@ export default function TagSelector({
 									<button
 										type="button"
 										onClick={handleCreateTag}
-										disabled={!newTagName.trim() || isLoading}
+										disabled={!newTagName.trim() || isCreateLoading}
 										className="flex-1 px-3 py-2 text-sm text-primary-foreground bg-primary hover:bg-primary-hover rounded-lg disabled:opacity-50"
 									>
-										{isLoading ? "Creating..." : "Create"}
+										{isCreateLoading ? "Creating..." : "Create"}
 									</button>
 								</div>
 							</div>
