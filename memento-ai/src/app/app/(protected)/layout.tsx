@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { ChatProvider } from "@/contexts/ChatContext";
 
 export default function ProtectedLayout({
 	children,
@@ -31,5 +32,5 @@ export default function ProtectedLayout({
 		return null;
 	}
 
-	return <>{children}</>;
+	return <ChatProvider>{children}</ChatProvider>;
 }
