@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useChat } from "@/contexts/ChatContext";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInput from "@/components/chat/ChatInput";
@@ -35,7 +36,19 @@ export default function ChatPage() {
 							Back
 						</button>
 
-						<h1 className="text-xl font-bold text-primary">Chat</h1>
+						<button
+							onClick={() => router.push("/")}
+							className="flex items-center gap-2"
+						>
+							<Image
+								src="/memento_logo.svg"
+								alt="Memento"
+								width={40}
+								height={40}
+								className="logo-cyan"
+							/>
+							<h1 className="text-xl font-bold text-primary">Chat</h1>
+						</button>
 
 						<button
 							onClick={clearChat}

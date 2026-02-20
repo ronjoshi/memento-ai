@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AboutPage() {
@@ -13,9 +14,21 @@ export default function AboutPage() {
 			<header className="bg-card shadow-sm border-b border-card-border">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 					<div className="flex justify-between items-center">
-						<h1 className="text-xl font-bold text-foreground">
-							Memento AI
-						</h1>
+						<button
+							onClick={() => router.push("/")}
+							className="flex items-center gap-2"
+						>
+							<Image
+								src="/memento_logo.svg"
+								alt="Memento"
+								width={40}
+								height={40}
+								className="logo-cyan"
+							/>
+							<h1 className="text-xl font-bold text-foreground">
+								Memento AI
+							</h1>
+						</button>
 						<div className="flex items-center space-x-4">
 							{isSignedIn ? (
 								<button

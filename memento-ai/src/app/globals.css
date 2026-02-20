@@ -106,3 +106,8 @@ body {
 		0 0 0 2px var(--ring-offset),
 		0 0 0 4px var(--ring);
 }
+
+/* Recolor black SVG to primary cyan (#22d3ee) */
+.logo-cyan {
+	filter: invert(78%) sepia(51%) saturate(1017%) hue-rotate(137deg) brightness(101%) contrast(91%);
+}
