@@ -18,23 +18,24 @@ interface RawMemory {
 export const SEARCH_BY_KEYWORD_TOOL: FunctionDefinition = {
 	name: "search_by_keyword",
 	description:
-		"Search the user's memories using semantic/keyword search. Use this when the user asks about their past experiences, events, or stored information using natural language queries.",
+		"Search the user's memories using semantic (embedding-based) search. This finds memories by meaning and concept, not just exact word matches — making it ideal for open-ended, feeling-based, or narrative queries like 'times I felt proud', 'what I was working on last year', or 'something about my dog'. Prefer this tool for abstract or exploratory questions. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
 	parameters: {
 		type: "object",
 		properties: {
 			query: {
 				type: "string",
-				description: "The search query to find relevant memories",
+				description:
+					"A natural language query describing what you're looking for. Should capture the concept or meaning of what the user is asking about — not necessarily their exact words.",
 			},
 			startTime: {
 				type: "string",
 				description:
-					"Optional ISO 8601 date string for the start of the search range (e.g., '2025-01-01T00:00:00Z')",
+					"Optional ISO 8601 datetime for the start of the search range (e.g., '2025-01-01T00:00:00Z'). Infer from natural language time references like 'last month', 'in 2024', 'this summer'.",
 			},
 			endTime: {
 				type: "string",
 				description:
-					"Optional ISO 8601 date string for the end of the search range (e.g., '2025-12-31T23:59:59Z')",
+					"Optional ISO 8601 datetime for the end of the search range (e.g., '2025-12-31T23:59:59Z'). Infer from natural language time references like 'last month', 'in 2024', 'this summer'.",
 			},
 		},
 		required: ["query"],

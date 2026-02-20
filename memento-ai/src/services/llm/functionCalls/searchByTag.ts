@@ -7,7 +7,7 @@ import { Memory } from "@/types";
 export const SEARCH_BY_TAG_TOOL: FunctionDefinition = {
 	name: "search_by_tag",
 	description:
-		"Search the user's memories by tag names and optional date range. Use this when the user wants to find memories associated with specific tags/categories.",
+		"Search the user's memories by tag labels — categories the user has applied to their memories. Use this when the user references a specific topic, person, place, or category (e.g. 'work memories', 'family stuff', 'travel', 'fitness'). Guess tag names from context — for 'family trip' try ['family', 'travel']; for 'work stuff' try ['work']. Unmatched tag names are handled gracefully, so don't be conservative. Can be combined with keyword search for thorough recall.",
 	parameters: {
 		type: "object",
 		properties: {
@@ -15,17 +15,17 @@ export const SEARCH_BY_TAG_TOOL: FunctionDefinition = {
 				type: "array",
 				items: { type: "string" },
 				description:
-					"List of tag names to search for. Memories matching at least one of these tags will be returned.",
+					"List of tag names to search for. Infer these from the user's query — use lowercase, single-word or short labels (e.g. ['work', 'travel', 'family']). Memories matching at least one tag will be returned. It's safe to include multiple guesses.",
 			},
 			startTime: {
 				type: "string",
 				description:
-					"Optional ISO 8601 date string for the start of the search range (e.g., '2025-01-01T00:00:00Z')",
+					"Optional ISO 8601 datetime for the start of the search range (e.g., '2025-01-01T00:00:00Z'). Infer from natural language time references like 'last month', 'in 2024', 'this summer'.",
 			},
 			endTime: {
 				type: "string",
 				description:
-					"Optional ISO 8601 date string for the end of the search range (e.g., '2025-12-31T23:59:59Z')",
+					"Optional ISO 8601 datetime for the end of the search range (e.g., '2025-12-31T23:59:59Z'). Infer from natural language time references like 'last month', 'in 2024', 'this summer'.",
 			},
 		},
 		required: ["tagNames"],
