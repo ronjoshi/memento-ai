@@ -7,7 +7,7 @@ import ChatInput from "@/components/chat/ChatInput";
 
 export default function ChatPage() {
 	const router = useRouter();
-	const { messages, isLoading, sendMessage } = useChat();
+	const { messages, isLoading, sendMessage, clearChat } = useChat();
 
 	return (
 		<div className="h-screen flex flex-col bg-background">
@@ -37,7 +37,12 @@ export default function ChatPage() {
 
 						<h1 className="text-xl font-bold text-primary">Chat</h1>
 
-						<div className="w-16"></div>
+						<button
+							onClick={clearChat}
+							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+						>
+							Clear chat
+						</button>
 					</div>
 				</div>
 			</header>
