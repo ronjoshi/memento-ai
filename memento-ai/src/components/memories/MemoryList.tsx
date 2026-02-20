@@ -6,6 +6,9 @@ import MemoryCard from "./MemoryCard";
 interface MemoryListProps {
 	memories: Memory[];
 	isLoading: boolean;
+	isLoadingMore?: boolean;
+	hasMore?: boolean;
+	onLoadMore?: () => void;
 	onEdit?: (memory: Memory) => void;
 	onDelete?: (memory: Memory) => void;
 }
@@ -13,6 +16,9 @@ interface MemoryListProps {
 export default function MemoryList({
 	memories,
 	isLoading,
+	isLoadingMore = false,
+	hasMore = false,
+	onLoadMore,
 	onEdit,
 	onDelete,
 }: MemoryListProps) {
@@ -74,6 +80,17 @@ export default function MemoryList({
 					onDelete={onDelete}
 				/>
 			))}
+			{hasMore && onLoadMore && (
+				<div className="flex justify-center pt-4">
+					<button
+						onClick={onLoadMore}
+						disabled={isLoadingMore}
+						className="px-6 py-2 text-sm font-medium text-muted-foreground bg-card border border-card-border rounded-lg hover:text-foreground hover:border-foreground/20 transition-colors disabled:opacity-50"
+					>
+						{isLoadingMore ? "Loading..." : "Load more"}
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }

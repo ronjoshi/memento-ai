@@ -2,8 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { generateEmbedding } from "@/services/embeddings";
 import { NextRequest, NextResponse } from "next/server";
 
-// GET: Fetch all memories for authenticated user (with tags)
-export async function GET() {
+// GET: Fetch memories for authenticated user (with tags), paginated
+export async function GET(request: NextRequest) {
 	try {
 		const supabase = await createClient();
 
@@ -19,13 +19,25 @@ export async function GET() {
 			);
 		}
 
-		// Fetch memories and tags
-		const [memoriesResult, tagsResult] = await Promise.all([
+		const { searchParams } = new URL(request.url);
+		const limit = Math.min(
+			parseInt(searchParams.get("limit") || "50", 10),
+			100,
+		);
+		const offset = parseInt(searchParams.get("offset") || "0", 10);
+
+		// Fetch paginated memories, total count, and tags
+		const [memoriesResult, countResult, tagsResult] = await Promise.all([
 			supabase
 				.from("memories")
 				.select("*")
 				.eq("user_id", user.id)
-				.order("created_at", { ascending: false }),
+				.order("created_at", { ascending: false })
+				.range(offset, offset + limit - 1),
+			supabase
+				.from("memories")
+				.select("*", { count: "exact", head: true })
+				.eq("user_id", user.id),
 			supabase.from("tags").select("*").eq("user_id", user.id),
 		]);
 
@@ -63,7 +75,13 @@ export async function GET() {
 				.filter(Boolean),
 		}));
 
-		return NextResponse.json({ memories });
+		const total = countResult.count ?? 0;
+
+		return NextResponse.json({
+			memories,
+			total,
+			hasMore: offset + limit < total,
+		});
 	} catch (error) {
 		console.error("Error fetching memories:", error);
 		return NextResponse.json(

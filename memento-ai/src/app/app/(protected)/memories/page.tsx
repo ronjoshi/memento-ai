@@ -11,31 +11,52 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 export default function MemoriesPage() {
 	const { signOut } = useAuth();
 	const router = useRouter();
+	const PAGE_SIZE = 50;
 	const [memories, setMemories] = useState<Memory[]>([]);
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [isLoadingMore, setIsLoadingMore] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
 	const [deletingMemory, setDeletingMemory] = useState<Memory | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const loadMemories = useCallback(async () => {
+	const loadMemories = useCallback(async (offset = 0, append = false) => {
 		try {
-			setIsLoading(true);
-			const response = await fetch("/api/memories");
+			if (append) {
+				setIsLoadingMore(true);
+			} else {
+				setIsLoading(true);
+			}
+
+			const response = await fetch(
+				`/api/memories?limit=${PAGE_SIZE}&offset=${offset}`
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to fetch memories");
 			}
 
 			const data = await response.json();
-			setMemories(data.memories);
+
+			if (append) {
+				setMemories((prev) => [...prev, ...data.memories]);
+			} else {
+				setMemories(data.memories);
+			}
+			setHasMore(data.hasMore);
 		} catch (error) {
 			console.error("Error loading memories:", error);
 		} finally {
 			setIsLoading(false);
+			setIsLoadingMore(false);
 		}
 	}, []);
+
+	const handleLoadMore = () => {
+		loadMemories(memories.length, true);
+	};
 
 	const loadTags = useCallback(async () => {
 		try {
@@ -253,6 +274,9 @@ export default function MemoriesPage() {
 				<MemoryList
 					memories={memories}
 					isLoading={isLoading}
+					isLoadingMore={isLoadingMore}
+					hasMore={hasMore}
+					onLoadMore={handleLoadMore}
 					onEdit={handleEditMemory}
 					onDelete={handleDeleteMemory}
 				/>
