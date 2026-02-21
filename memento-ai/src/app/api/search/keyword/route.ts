@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { JournalSearchParams } from "@/types";
 
 // POST: Search journal entries using semantic search
 export async function POST(request: NextRequest) {
@@ -18,7 +19,12 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const { query, matchCount = 5 } = await request.json();
+		const {
+			query,
+			matchCount = 5,
+			startTime,
+			endTime,
+		} = await request.json();
 
 		if (!query || query.trim() === "") {
 			return NextResponse.json(
@@ -27,14 +33,18 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
+		const requestBody: JournalSearchParams = {
+			query,
+			matchCount,
+			startTime,
+			endTime,
+		};
+
 		// Call the search-memories edge function
 		const { data, error } = await supabase.functions.invoke(
 			"search-memories",
 			{
-				body: {
-					query,
-					matchCount,
-				},
+				body: requestBody,
 			},
 		);
 
@@ -62,7 +72,9 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json(
 			{
 				error:
-					error instanceof Error ? error.message : "Internal server error",
+					error instanceof Error
+						? error.message
+						: "Internal server error",
 			},
 			{ status: 500 },
 		);

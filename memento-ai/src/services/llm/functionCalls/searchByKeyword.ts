@@ -1,16 +1,4 @@
 import { FunctionDefinition } from "@/services/llm/types";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { EdgeFunctionService } from "@/services/edgeFunction";
-
-// Raw journal entry type from edge function (snake_case)
-interface RawJournalEntry {
-	id: string;
-	user_id: string;
-	memory_data: string;
-	tag_ids: number[];
-	created_at: string;
-	embedding?: number[];
-}
 
 /**
  * Tool definition for searching user journal entries by keyword (semantic search)
@@ -60,20 +48,28 @@ export async function executeSearchByKeyword(
 	args: SearchByKeywordArgs,
 ): Promise<string> {
 	try {
-		const supabase = getSupabaseBrowserClient();
-		const edgeFunctionService = new EdgeFunctionService(supabase);
+		const response = await fetch("/api/search/keyword", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				query: args.query,
+				matchCount: 5,
+				startTime: args.startTime,
+				endTime: args.endTime,
+			}),
+		});
 
-		const response = await edgeFunctionService.searchJournals(
-			args.query,
-			5, // matchCount
-			args.startTime,
-			args.endTime,
-		);
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(
+				errorData.error || "Failed to search journal entries",
+			);
+		}
 
-		// Cast to unknown first, then to RawJournalEntry[] since edge function returns snake_case
-		const rawData = response.data as unknown as RawJournalEntry[];
+		const data = await response.json();
+		const journals = data.journals || [];
 
-		if (!rawData || rawData.length === 0) {
+		if (journals.length === 0) {
 			return JSON.stringify({
 				success: true,
 				message: "No journal entries found matching the search query.",
@@ -81,20 +77,10 @@ export async function executeSearchByKeyword(
 			});
 		}
 
-		// Format journal entries for the LLM - include all fields except embedding
-		// Note: EdgeFunctionService returns snake_case from the edge function
-		const formattedJournals = rawData.map((entry) => ({
-			id: entry.id,
-			journalData: entry.memory_data,
-			tagIds: entry.tag_ids || [],
-			createdAt: entry.created_at,
-			userId: entry.user_id,
-		}));
-
 		return JSON.stringify({
 			success: true,
-			message: `Found ${rawData.length} relevant journal entries.`,
-			journals: formattedJournals,
+			message: `Found ${journals.length} relevant journal entries.`,
+			journals,
 		});
 	} catch (error) {
 		console.error("Error executing search_by_keyword:", error);
