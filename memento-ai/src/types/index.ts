@@ -81,20 +81,20 @@ export interface Tag {
 	createdAt: string;
 }
 
-export interface Memory {
+export interface JournalEntry {
 	id: string;
 	userId: string;
-	memoryData: string;
+	journalData: string;
 	tagIds: number[]; // Array of tag IDs stored in database
 	createdAt: string;
 	embedding?: number[];
 	tags?: Tag[]; // Resolved tag objects (populated from tagIds)
 }
 
-export interface MemoryWithTag {
+export interface JournalEntryWithTag {
 	id: string;
 	userId: string;
-	memoryData: string;
+	journalData: string;
 	createdAt: string;
 	tags: Tag[];
 }
@@ -131,22 +131,22 @@ export interface LLMResponse {
 	finishReason: string | null;
 }
 
-export interface MemorySummaryResponse {
+export interface JournalSummaryResponse {
 	data: {
 		summary: string;
-		totalMemories: number;
+		totalJournals: number;
 	};
 }
 
-export interface MemorySearchParams {
+export interface JournalSearchParams {
 	query: string;
 	matchCount?: number;
 	startTime?: string;
 	endTime?: string;
 }
 
-export interface SearchMemoriesResponse {
-	data: Memory[];
+export interface SearchJournalsResponse {
+	data: JournalEntry[];
 	query: string;
 	matchCount: number;
 }
@@ -162,14 +162,14 @@ export interface AuthState {
 	isSignedIn: boolean;
 }
 
-// Memory reference extracted from tool results for display
-export interface MemoryReference {
+// Journal reference extracted from tool results for display
+export interface JournalReference {
 	id: string;
-	memoryData: string;
+	journalData: string;
 	createdAt: string;
 }
 
 // Processed message for display (enriched ConversationMessage)
 export interface DisplayMessage extends ConversationMessage {
-	attachedMemories?: MemoryReference[];
+	attachedJournals?: JournalReference[];
 }

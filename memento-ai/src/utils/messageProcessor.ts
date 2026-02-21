@@ -1,17 +1,17 @@
 import {
 	ConversationMessage,
 	DisplayMessage,
-	MemoryReference,
+	JournalReference,
 } from "@/types";
 
-const MEMORY_SEARCH_TOOLS = ["search_by_keyword", "search_by_tag"];
+const JOURNAL_SEARCH_TOOLS = ["search_by_keyword", "search_by_tag"];
 
 interface ParsedToolResult {
 	success: boolean;
 	message: string;
-	memories?: Array<{
+	journals?: Array<{
 		id: string;
-		memoryData: string;
+		journalData: string;
 		createdAt: string;
 	}>;
 }
@@ -20,19 +20,19 @@ interface ParsedToolResult {
  * Process messages for display:
  * - Filter out tool messages
  * - Filter out assistant messages without content
- * - Extract memories from tool results and attach to following assistant messages
+ * - Extract journal entries from tool results and attach to following assistant messages
  */
 export function processMessagesForDisplay(
 	messages: ConversationMessage[],
 ): DisplayMessage[] {
 	const result: DisplayMessage[] = [];
-	const pendingMemories: MemoryReference[] = [];
+	const pendingJournals: JournalReference[] = [];
 
 	for (const message of messages) {
 		// Skip tool messages (they won't be rendered directly)
 		if (message.role === "tool") {
-			const memories = extractMemoriesFromToolResult(message, messages);
-			pendingMemories.push(...memories);
+			const journals = extractJournalsFromToolResult(message, messages);
+			pendingJournals.push(...journals);
 			continue;
 		}
 
@@ -44,15 +44,15 @@ export function processMessagesForDisplay(
 				continue;
 			}
 
-			// Attach any pending memories to this assistant message
+			// Attach any pending journals to this assistant message
 			const displayMessage: DisplayMessage = {
 				...message,
-				attachedMemories:
-					pendingMemories.length > 0 ? [...pendingMemories] : undefined,
+				attachedJournals:
+					pendingJournals.length > 0 ? [...pendingJournals] : undefined,
 			};
 
-			// Clear pending memories after attaching
-			pendingMemories.length = 0;
+			// Clear pending journals after attaching
+			pendingJournals.length = 0;
 			result.push(displayMessage);
 			continue;
 		}
@@ -64,10 +64,10 @@ export function processMessagesForDisplay(
 	return result;
 }
 
-function extractMemoriesFromToolResult(
+function extractJournalsFromToolResult(
 	toolMessage: ConversationMessage,
 	allMessages: ConversationMessage[],
-): MemoryReference[] {
+): JournalReference[] {
 	if (!toolMessage.tool_call_id || !toolMessage.content) {
 		return [];
 	}
@@ -81,23 +81,23 @@ function extractMemoriesFromToolResult(
 
 	if (!parentMessage) return [];
 
-	// Check if this tool call was a memory search
+	// Check if this tool call was a journal search
 	const toolCall = parentMessage.tool_calls?.find(
 		(tc) => tc.id === toolMessage.tool_call_id,
 	);
 
-	if (!toolCall || !MEMORY_SEARCH_TOOLS.includes(toolCall.function.name)) {
+	if (!toolCall || !JOURNAL_SEARCH_TOOLS.includes(toolCall.function.name)) {
 		return [];
 	}
 
 	// Parse the tool result
 	try {
 		const parsed: ParsedToolResult = JSON.parse(toolMessage.content);
-		if (parsed.success && parsed.memories && parsed.memories.length > 0) {
-			return parsed.memories.map((m) => ({
-				id: m.id,
-				memoryData: m.memoryData,
-				createdAt: m.createdAt,
+		if (parsed.success && parsed.journals && parsed.journals.length > 0) {
+			return parsed.journals.map((j) => ({
+				id: j.id,
+				journalData: j.journalData,
+				createdAt: j.createdAt,
 			}));
 		}
 	} catch (e) {

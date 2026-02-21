@@ -6,7 +6,7 @@
  * Keep these in sync when making changes to either file.
  */
 
-export interface Memory {
+export interface JournalEntry {
 	id: string;
 	user_id: string;
 	memory_data: string;
@@ -22,7 +22,7 @@ export interface Tag {
 	created_at: string;
 }
 
-export interface MemorySearchParams {
+export interface JournalSearchParams {
 	query: string;
 	matchCount?: number;
 	startTime?: string;

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { generateEmbedding } from "@/services/embeddings";
 import { NextRequest, NextResponse } from "next/server";
 
-// PUT: Update a memory
+// PUT: Update a journal entry
 export async function PUT(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> },
@@ -23,11 +23,11 @@ export async function PUT(
 			);
 		}
 
-		const { memoryData, tagIds, createdAt } = await request.json();
+		const { journalData, tagIds, createdAt } = await request.json();
 
-		if (!memoryData) {
+		if (!journalData) {
 			return NextResponse.json(
-				{ error: "Memory content is required" },
+				{ error: "Journal entry content is required" },
 				{ status: 400 },
 			);
 		}
@@ -39,21 +39,21 @@ export async function PUT(
 			);
 		}
 
-		// Verify the memory belongs to the user
-		const { data: existingMemory, error: fetchError } = await supabase
+		// Verify the journal entry belongs to the user
+		const { data: existingJournal, error: fetchError } = await supabase
 			.from("memories")
 			.select("id, user_id")
 			.eq("id", id)
 			.single();
 
-		if (fetchError || !existingMemory) {
+		if (fetchError || !existingJournal) {
 			return NextResponse.json(
-				{ error: "Memory not found" },
+				{ error: "Journal entry not found" },
 				{ status: 404 },
 			);
 		}
 
-		if (existingMemory.user_id !== user.id) {
+		if (existingJournal.user_id !== user.id) {
 			return NextResponse.json(
 				{ error: "Unauthorized" },
 				{ status: 403 },
@@ -61,10 +61,10 @@ export async function PUT(
 		}
 
 		// Regenerate embedding for updated content
-		const embedding = await generateEmbedding(memoryData);
+		const embedding = await generateEmbedding(journalData);
 
 		const updateData: Record<string, unknown> = {
-			memory_data: memoryData,
+			memory_data: journalData,
 			tag_ids: tagIds,
 			embedding: embedding,
 		};
@@ -86,16 +86,16 @@ export async function PUT(
 		}
 
 		return NextResponse.json({
-			memory: {
+			journal: {
 				id: data.id,
 				userId: data.user_id,
-				memoryData: data.memory_data,
+				journalData: data.memory_data,
 				createdAt: data.created_at,
 				tagIds: data.tag_ids || [],
 			},
 		});
 	} catch (error) {
-		console.error("Error updating memory:", error);
+		console.error("Error updating journal entry:", error);
 		return NextResponse.json(
 			{
 				error:
@@ -108,7 +108,7 @@ export async function PUT(
 	}
 }
 
-// DELETE: Delete a memory
+// DELETE: Delete a journal entry
 export async function DELETE(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> },
@@ -129,21 +129,21 @@ export async function DELETE(
 			);
 		}
 
-		// Verify the memory belongs to the user
-		const { data: existingMemory, error: fetchError } = await supabase
+		// Verify the journal entry belongs to the user
+		const { data: existingJournal, error: fetchError } = await supabase
 			.from("memories")
 			.select("id, user_id")
 			.eq("id", id)
 			.single();
 
-		if (fetchError || !existingMemory) {
+		if (fetchError || !existingJournal) {
 			return NextResponse.json(
-				{ error: "Memory not found" },
+				{ error: "Journal entry not found" },
 				{ status: 404 },
 			);
 		}
 
-		if (existingMemory.user_id !== user.id) {
+		if (existingJournal.user_id !== user.id) {
 			return NextResponse.json(
 				{ error: "Unauthorized" },
 				{ status: 403 },
@@ -158,7 +158,7 @@ export async function DELETE(
 
 		return NextResponse.json({ success: true });
 	} catch (error) {
-		console.error("Error deleting memory:", error);
+		console.error("Error deleting journal entry:", error);
 		return NextResponse.json(
 			{
 				error:

@@ -2,8 +2,8 @@ import { FunctionDefinition } from "@/services/llm/types";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { EdgeFunctionService } from "@/services/edgeFunction";
 
-// Raw memory type from edge function (snake_case)
-interface RawMemory {
+// Raw journal entry type from edge function (snake_case)
+interface RawJournalEntry {
 	id: string;
 	user_id: string;
 	memory_data: string;
@@ -13,12 +13,12 @@ interface RawMemory {
 }
 
 /**
- * Tool definition for searching user memories by keyword (semantic search)
+ * Tool definition for searching user journal entries by keyword (semantic search)
  */
 export const SEARCH_BY_KEYWORD_TOOL: FunctionDefinition = {
 	name: "search_by_keyword",
 	description:
-		"Search the user's memories using semantic (embedding-based) search. This finds memories by meaning and concept, not just exact word matches — making it ideal for open-ended, feeling-based, or narrative queries like 'times I felt proud', 'what I was working on last year', or 'something about my dog'. Prefer this tool for abstract or exploratory questions. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
+		"Search the user's journal entries using semantic (embedding-based) search. This finds journal entries by meaning and concept, not just exact word matches — making it ideal for open-ended, feeling-based, or narrative queries like 'times I felt proud', 'what I was working on last year', or 'something about my dog'. Prefer this tool for abstract or exploratory questions. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
 	parameters: {
 		type: "object",
 		properties: {
@@ -63,38 +63,38 @@ export async function executeSearchByKeyword(
 		const supabase = getSupabaseBrowserClient();
 		const edgeFunctionService = new EdgeFunctionService(supabase);
 
-		const response = await edgeFunctionService.searchMemories(
+		const response = await edgeFunctionService.searchJournals(
 			args.query,
 			5, // matchCount
 			args.startTime,
 			args.endTime,
 		);
 
-		// Cast to unknown first, then to RawMemory[] since edge function returns snake_case
-		const rawData = response.data as unknown as RawMemory[];
+		// Cast to unknown first, then to RawJournalEntry[] since edge function returns snake_case
+		const rawData = response.data as unknown as RawJournalEntry[];
 
 		if (!rawData || rawData.length === 0) {
 			return JSON.stringify({
 				success: true,
-				message: "No memories found matching the search query.",
-				memories: [],
+				message: "No journal entries found matching the search query.",
+				journals: [],
 			});
 		}
 
-		// Format memories for the LLM - include all fields except embedding
+		// Format journal entries for the LLM - include all fields except embedding
 		// Note: EdgeFunctionService returns snake_case from the edge function
-		const formattedMemories = rawData.map((memory) => ({
-			id: memory.id,
-			memoryData: memory.memory_data,
-			tagIds: memory.tag_ids || [],
-			createdAt: memory.created_at,
-			userId: memory.user_id,
+		const formattedJournals = rawData.map((entry) => ({
+			id: entry.id,
+			journalData: entry.memory_data,
+			tagIds: entry.tag_ids || [],
+			createdAt: entry.created_at,
+			userId: entry.user_id,
 		}));
 
 		return JSON.stringify({
 			success: true,
-			message: `Found ${rawData.length} relevant memories.`,
-			memories: formattedMemories,
+			message: `Found ${rawData.length} relevant journal entries.`,
+			journals: formattedJournals,
 		});
 	} catch (error) {
 		console.error("Error executing search_by_keyword:", error);
@@ -103,8 +103,8 @@ export async function executeSearchByKeyword(
 			message:
 				error instanceof Error
 					? error.message
-					: "Failed to search memories",
-			memories: [],
+					: "Failed to search journal entries",
+			journals: [],
 		});
 	}
 }

@@ -11,7 +11,7 @@ const avenirNext = localFont({
 
 export const metadata: Metadata = {
 	title: "Memento AI",
-	description: "Personal memory storage and retrieval with AI-powered search",
+	description: "Personal journal with AI-powered search and recall",
 };
 
 export default function RootLayout({

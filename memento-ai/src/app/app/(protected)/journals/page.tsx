@@ -4,26 +4,26 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
-import { Memory, Tag, TagColor } from "@/types";
-import MemoryList from "@/components/memories/MemoryList";
-import MemoryModal from "@/components/memories/MemoryModal";
+import { JournalEntry, Tag, TagColor } from "@/types";
+import JournalEntryList from "@/components/journals/JournalEntryList";
+import JournalEntryModal from "@/components/journals/JournalEntryModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 
-export default function MemoriesPage() {
+export default function JournalsPage() {
 	const { signOut } = useAuth();
 	const router = useRouter();
 	const PAGE_SIZE = 50;
-	const [memories, setMemories] = useState<Memory[]>([]);
+	const [entries, setEntries] = useState<JournalEntry[]>([]);
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isLoadingMore, setIsLoadingMore] = useState(false);
 	const [hasMore, setHasMore] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
-	const [deletingMemory, setDeletingMemory] = useState<Memory | null>(null);
+	const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
+	const [deletingEntry, setDeletingEntry] = useState<JournalEntry | null>(null);
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const loadMemories = useCallback(async (offset = 0, append = false) => {
+	const loadJournals = useCallback(async (offset = 0, append = false) => {
 		try {
 			if (append) {
 				setIsLoadingMore(true);
@@ -36,19 +36,19 @@ export default function MemoriesPage() {
 			);
 
 			if (!response.ok) {
-				throw new Error("Failed to fetch memories");
+				throw new Error("Failed to fetch journal entries");
 			}
 
 			const data = await response.json();
 
 			if (append) {
-				setMemories((prev) => [...prev, ...data.memories]);
+				setEntries((prev) => [...prev, ...data.journals]);
 			} else {
-				setMemories(data.memories);
+				setEntries(data.journals);
 			}
 			setHasMore(data.hasMore);
 		} catch (error) {
-			console.error("Error loading memories:", error);
+			console.error("Error loading journal entries:", error);
 		} finally {
 			setIsLoading(false);
 			setIsLoadingMore(false);
@@ -56,7 +56,7 @@ export default function MemoriesPage() {
 	}, []);
 
 	const handleLoadMore = () => {
-		loadMemories(memories.length, true);
+		loadJournals(entries.length, true);
 	};
 
 	const loadTags = useCallback(async () => {
@@ -75,71 +75,71 @@ export default function MemoriesPage() {
 	}, []);
 
 	useEffect(() => {
-		loadMemories();
+		loadJournals();
 		loadTags();
-	}, [loadMemories, loadTags]);
+	}, [loadJournals, loadTags]);
 
-	const handleSaveMemory = async (memoryData: string, tagIds: number[], createdAt?: string) => {
-		if (editingMemory) {
-			// Update existing memory
-			const response = await fetch(`/api/memories/${editingMemory.id}`, {
+	const handleSaveJournal = async (journalData: string, tagIds: number[], createdAt?: string) => {
+		if (editingEntry) {
+			// Update existing journal entry
+			const response = await fetch(`/api/memories/${editingEntry.id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ memoryData, tagIds, createdAt }),
+				body: JSON.stringify({ journalData, tagIds, createdAt }),
 			});
 
 			if (!response.ok) {
 				const error = await response.json();
-				throw new Error(error.error || "Failed to update memory");
+				throw new Error(error.error || "Failed to update journal entry");
 			}
 		} else {
-			// Create new memory
+			// Create new journal entry
 			const response = await fetch("/api/memories", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ memoryData, tagIds, createdAt }),
+				body: JSON.stringify({ journalData, tagIds, createdAt }),
 			});
 
 			if (!response.ok) {
 				const error = await response.json();
-				throw new Error(error.error || "Failed to save memory");
+				throw new Error(error.error || "Failed to save journal entry");
 			}
 		}
 
-		await loadMemories();
+		await loadJournals();
 	};
 
-	const handleEditMemory = (memory: Memory) => {
-		setEditingMemory(memory);
+	const handleEditJournal = (entry: JournalEntry) => {
+		setEditingEntry(entry);
 		setShowModal(true);
 	};
 
-	const handleDeleteMemory = (memory: Memory) => {
-		setDeletingMemory(memory);
+	const handleDeleteJournal = (entry: JournalEntry) => {
+		setDeletingEntry(entry);
 	};
 
-	const confirmDeleteMemory = async () => {
-		if (!deletingMemory) return;
+	const confirmDeleteJournal = async () => {
+		if (!deletingEntry) return;
 
 		setIsDeleting(true);
 		try {
-			const response = await fetch(`/api/memories/${deletingMemory.id}`, {
+			const response = await fetch(`/api/memories/${deletingEntry.id}`, {
 				method: "DELETE",
 			});
 
 			if (!response.ok) {
 				const error = await response.json();
-				throw new Error(error.error || "Failed to delete memory");
+				throw new Error(error.error || "Failed to delete journal entry");
 			}
 
-			await loadMemories();
-			setDeletingMemory(null);
+			await loadJournals();
+			setDeletingEntry(null);
 		} catch (error) {
-			console.error("Error deleting memory:", error);
+			console.error("Error deleting journal entry:", error);
 		} finally {
 			setIsDeleting(false);
 		}
@@ -147,11 +147,11 @@ export default function MemoriesPage() {
 
 	const handleCloseModal = () => {
 		setShowModal(false);
-		setEditingMemory(null);
+		setEditingEntry(null);
 	};
 
 	const handleOpenAddModal = () => {
-		setEditingMemory(null);
+		setEditingEntry(null);
 		setShowModal(true);
 	};
 
@@ -213,7 +213,7 @@ export default function MemoriesPage() {
 								className="logo-cyan"
 							/>
 							<h1 className="text-xl font-bold text-primary">
-								Memories
+								Journal
 							</h1>
 						</button>
 
@@ -241,7 +241,7 @@ export default function MemoriesPage() {
 							<button
 								onClick={handleOpenAddModal}
 								className="p-2 text-muted-foreground hover:text-primary transition-colors"
-								title="Add Memory"
+								title="Add Journal Entry"
 							>
 								<svg
 									className="w-5 h-5"
@@ -284,37 +284,37 @@ export default function MemoriesPage() {
 
 			{/* Main Content */}
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-				<MemoryList
-					memories={memories}
+				<JournalEntryList
+					entries={entries}
 					isLoading={isLoading}
 					isLoadingMore={isLoadingMore}
 					hasMore={hasMore}
 					onLoadMore={handleLoadMore}
-					onEdit={handleEditMemory}
-					onDelete={handleDeleteMemory}
+					onEdit={handleEditJournal}
+					onDelete={handleDeleteJournal}
 				/>
 			</main>
 
-			{/* Memory Modal */}
-			<MemoryModal
+			{/* Journal Entry Modal */}
+			<JournalEntryModal
 				isOpen={showModal}
 				onClose={handleCloseModal}
-				onSave={handleSaveMemory}
+				onSave={handleSaveJournal}
 				availableTags={tags}
 				onCreateTag={handleCreateTag}
 				onDeleteTag={handleDeleteTag}
-				editingMemory={editingMemory}
+				editingEntry={editingEntry}
 			/>
 
 			{/* Delete Confirmation Modal */}
 			<ConfirmModal
-				isOpen={!!deletingMemory}
-				title="Delete Memory"
-				message="Are you sure you want to delete this memory? This action cannot be undone."
+				isOpen={!!deletingEntry}
+				title="Delete Journal Entry"
+				message="Are you sure you want to delete this journal entry? This action cannot be undone."
 				confirmText="Delete"
 				cancelText="Cancel"
-				onConfirm={confirmDeleteMemory}
-				onCancel={() => setDeletingMemory(null)}
+				onConfirm={confirmDeleteJournal}
+				onCancel={() => setDeletingEntry(null)}
 				isLoading={isDeleting}
 			/>
 		</div>

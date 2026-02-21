@@ -1,17 +1,17 @@
 "use client";
 
-import { Memory } from "@/types";
-import MemoryCard from "@/components/memories/MemoryCard";
+import { JournalEntry } from "@/types";
+import JournalEntryCard from "@/components/journals/JournalEntryCard";
 
 interface SearchResultsProps {
-	memories: Memory[];
+	entries: JournalEntry[];
 	query: string;
 	isLoading: boolean;
 	hasSearched: boolean;
 }
 
 export default function SearchResults({
-	memories,
+	entries,
 	query,
 	isLoading,
 	hasSearched,
@@ -55,17 +55,17 @@ export default function SearchResults({
 					</svg>
 				</div>
 				<h3 className="text-lg font-medium text-foreground mb-1">
-					Search your memories
+					Search your journal
 				</h3>
 				<p className="text-muted-foreground">
-					Enter a query to find relevant memories using AI-powered
+					Enter a query to find relevant journal entries using AI-powered
 					semantic search.
 				</p>
 			</div>
 		);
 	}
 
-	if (memories.length === 0) {
+	if (entries.length === 0) {
 		return (
 			<div className="text-center py-12">
 				<div className="text-muted-foreground mb-4">
@@ -87,7 +87,7 @@ export default function SearchResults({
 					No results found
 				</h3>
 				<p className="text-muted-foreground">
-					No memories matched &quot;{query}&quot;. Try a different
+					No journal entries matched &quot;{query}&quot;. Try a different
 					search term.
 				</p>
 			</div>
@@ -97,11 +97,11 @@ export default function SearchResults({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground">
-				Found {memories.length} result{memories.length !== 1 ? "s" : ""}{" "}
+				Found {entries.length} result{entries.length !== 1 ? "s" : ""}{" "}
 				for &quot;{query}&quot;
 			</div>
-			{memories.map((memory) => (
-				<MemoryCard key={memory.id} memory={memory} />
+			{entries.map((entry) => (
+				<JournalEntryCard key={entry.id} entry={entry} />
 			))}
 		</div>
 	);

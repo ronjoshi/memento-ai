@@ -37,8 +37,8 @@ export default function AuthForm() {
 				await signIn(email, password);
 				console.log("AuthForm: Sign in completed successfully");
 			}
-			// Redirect to memories page after successful auth
-			router.push("/app/memories");
+			// Redirect to journals page after successful auth
+			router.push("/app/journals");
 		} catch (err) {
 			console.error("AuthForm: Auth error:", err);
 			setError(err instanceof Error ? err.message : "An error occurred");
@@ -53,7 +53,7 @@ export default function AuthForm() {
 						Memento AI
 					</h1>
 					<p className="text-muted-foreground mb-4">
-						Your personal memory vault
+						Your personal journal
 					</p>
 					<h2 className="text-2xl font-semibold text-foreground">
 						{isSignUp ? "Create Account" : "Welcome Back"}

@@ -1,9 +1,9 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {
-	Memory,
+	JournalEntry,
 	Tag,
 	TagColor,
-	MemoryWithTag,
+	JournalEntryWithTag,
 	ConversationMessage,
 } from "@/types";
 
@@ -14,7 +14,7 @@ export class DatabaseService {
 		this.supabase = supabase;
 	}
 
-	async fetchMemories(): Promise<Memory[]> {
+	async fetchJournals(): Promise<JournalEntry[]> {
 		const {
 			data: { user },
 		} = await this.supabase.auth.getUser();
@@ -36,18 +36,18 @@ export class DatabaseService {
 		return (data || []).map((item) => ({
 			id: item.id,
 			userId: item.user_id,
-			memoryData: item.memory_data,
+			journalData: item.memory_data,
 			tagIds: item.tag_ids || [],
 			createdAt: item.created_at,
 			embedding: item.embedding,
 		}));
 	}
 
-	async filterMemories(opts: {
+	async filterJournals(opts: {
 		tagIds?: number[];
 		startTime?: string;
 		endTime?: string;
-	}): Promise<Memory[]> {
+	}): Promise<JournalEntry[]> {
 		const {
 			data: { user },
 		} = await this.supabase.auth.getUser();
@@ -82,14 +82,14 @@ export class DatabaseService {
 		return (data || []).map((item: any) => ({
 			id: item.id,
 			userId: item.user_id,
-			memoryData: item.memory_data,
+			journalData: item.memory_data,
 			tagIds: item.tag_ids || [],
 			createdAt: item.created_at,
 			embedding: item.embedding,
 		}));
 	}
 
-	async fetchMemoriesWithTags(): Promise<MemoryWithTag[]> {
+	async fetchJournalsWithTags(): Promise<JournalEntryWithTag[]> {
 		const {
 			data: { user },
 		} = await this.supabase.auth.getUser();
@@ -98,8 +98,7 @@ export class DatabaseService {
 			throw new Error("User not authenticated");
 		}
 
-		// Fetch memories and tags
-		const [memoriesResult, tagsResult] = await Promise.all([
+		const [journalsResult, tagsResult] = await Promise.all([
 			this.supabase
 				.from("memories")
 				.select("id, user_id, memory_data, tag_ids, created_at")
@@ -111,8 +110,8 @@ export class DatabaseService {
 				.eq("user_id", user.id),
 		]);
 
-		if (memoriesResult.error) {
-			throw memoriesResult.error;
+		if (journalsResult.error) {
+			throw journalsResult.error;
 		}
 
 		// Build a map of tag id -> tag for quick lookup
@@ -129,10 +128,10 @@ export class DatabaseService {
 			}
 		}
 
-		return (memoriesResult.data || []).map((item) => ({
+		return (journalsResult.data || []).map((item) => ({
 			id: item.id,
 			userId: item.user_id,
-			memoryData: item.memory_data,
+			journalData: item.memory_data,
 			createdAt: item.created_at,
 			tags: (item.tag_ids || [])
 				.map((id: number) => tagMap.get(id))
@@ -140,8 +139,8 @@ export class DatabaseService {
 		}));
 	}
 
-	async insertMemory(
-		memoryData: string,
+	async insertJournal(
+		journalData: string,
 		embedding: number[],
 		tagIds: number[],
 	): Promise<string> {
@@ -157,7 +156,7 @@ export class DatabaseService {
 			.from("memories")
 			.insert({
 				user_id: user.id,
-				memory_data: memoryData,
+				memory_data: journalData,
 				tag_ids: tagIds,
 				embedding: embedding,
 				created_at: new Date().toISOString(),
@@ -289,7 +288,7 @@ export class DatabaseService {
 		}
 	}
 
-	async setMemoryTags(memoryId: string, tagIds: number[]): Promise<void> {
+	async setJournalTags(journalId: string, tagIds: number[]): Promise<void> {
 		const {
 			data: { user },
 		} = await this.supabase.auth.getUser();
@@ -301,7 +300,7 @@ export class DatabaseService {
 		const { error } = await this.supabase
 			.from("memories")
 			.update({ tag_ids: tagIds })
-			.eq("id", memoryId)
+			.eq("id", journalId)
 			.eq("user_id", user.id);
 
 		if (error) {

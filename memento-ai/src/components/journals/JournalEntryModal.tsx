@@ -1,48 +1,48 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Memory, Tag, TagColor } from "@/types";
+import { JournalEntry, Tag, TagColor } from "@/types";
 import TagSelector from "@/components/tags/TagSelector";
 
-interface MemoryModalProps {
+interface JournalEntryModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onSave: (memoryData: string, tagIds: number[], createdAt?: string) => Promise<void>;
+	onSave: (journalData: string, tagIds: number[], createdAt?: string) => Promise<void>;
 	availableTags: Tag[];
 	onCreateTag: (name: string, color: TagColor) => Promise<Tag>;
 	onDeleteTag?: (tagId: number) => Promise<void>;
-	editingMemory?: Memory | null;
+	editingEntry?: JournalEntry | null;
 }
 
-export default function MemoryModal({
+export default function JournalEntryModal({
 	isOpen,
 	onClose,
 	onSave,
 	availableTags,
 	onCreateTag,
 	onDeleteTag,
-	editingMemory,
-}: MemoryModalProps) {
-	const [memoryText, setMemoryText] = useState("");
+	editingEntry,
+}: JournalEntryModalProps) {
+	const [entryText, setEntryText] = useState("");
 	const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 	const [selectedDate, setSelectedDate] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
-	const isEditing = !!editingMemory;
+	const isEditing = !!editingEntry;
 
-	// Reset form when modal opens or editingMemory changes
+	// Reset form when modal opens or editingEntry changes
 	useEffect(() => {
 		if (isOpen) {
-			if (editingMemory) {
-				setMemoryText(editingMemory.memoryData);
-				setSelectedTagIds(editingMemory.tagIds || []);
+			if (editingEntry) {
+				setEntryText(editingEntry.journalData);
+				setSelectedTagIds(editingEntry.tagIds || []);
 				// Convert ISO string to local datetime-local format
-				const date = new Date(editingMemory.createdAt);
+				const date = new Date(editingEntry.createdAt);
 				const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
 				setSelectedDate(localDate.toISOString().slice(0, 16));
 			} else {
-				setMemoryText("");
+				setEntryText("");
 				setSelectedTagIds([]);
 				// Default to current date/time
 				const now = new Date();
@@ -51,13 +51,13 @@ export default function MemoryModal({
 			}
 			setError("");
 		}
-	}, [isOpen, editingMemory]);
+	}, [isOpen, editingEntry]);
 
 	if (!isOpen) return null;
 
 	const handleSave = async () => {
-		if (!memoryText.trim()) {
-			setError("Please enter memory content");
+		if (!entryText.trim()) {
+			setError("Please enter journal entry content");
 			return;
 		}
 
@@ -72,13 +72,13 @@ export default function MemoryModal({
 		try {
 			// Convert local datetime to ISO string
 			const createdAt = selectedDate ? new Date(selectedDate).toISOString() : undefined;
-			await onSave(memoryText.trim(), selectedTagIds, createdAt);
-			setMemoryText("");
+			await onSave(entryText.trim(), selectedTagIds, createdAt);
+			setEntryText("");
 			setSelectedTagIds([]);
 			onClose();
 		} catch (err) {
 			setError(
-				err instanceof Error ? err.message : "Failed to save memory",
+				err instanceof Error ? err.message : "Failed to save journal entry",
 			);
 		} finally {
 			setIsLoading(false);
@@ -87,7 +87,7 @@ export default function MemoryModal({
 
 	const handleClose = () => {
 		if (!isLoading) {
-			setMemoryText("");
+			setEntryText("");
 			setSelectedTagIds([]);
 			setError("");
 			onClose();
@@ -108,7 +108,7 @@ export default function MemoryModal({
 					{/* Header */}
 					<div className="border-b border-border px-6 py-4">
 						<h3 className="text-lg font-semibold text-card-foreground">
-							{isEditing ? "Edit Memory" : "Add Memory"}
+							{isEditing ? "Edit Journal Entry" : "Add Journal Entry"}
 						</h3>
 					</div>
 
@@ -116,17 +116,17 @@ export default function MemoryModal({
 					<div className="px-6 py-4 space-y-4">
 						<div>
 							<label
-								htmlFor="memory-content"
+								htmlFor="entry-content"
 								className="block text-sm font-medium text-card-foreground mb-2"
 							>
-								Memory
+								Journal Entry
 							</label>
 							<textarea
-								id="memory-content"
+								id="entry-content"
 								rows={10}
-								value={memoryText}
-								onChange={(e) => setMemoryText(e.target.value)}
-								placeholder="What do you want to remember?"
+								value={entryText}
+								onChange={(e) => setEntryText(e.target.value)}
+								placeholder="What do you want to record?"
 								className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground placeholder-muted-foreground resize-y min-h-[200px]"
 								disabled={isLoading}
 							/>
@@ -134,13 +134,13 @@ export default function MemoryModal({
 
 						<div>
 							<label
-								htmlFor="memory-date"
+								htmlFor="entry-date"
 								className="block text-sm font-medium text-card-foreground mb-2"
 							>
 								Date
 							</label>
 							<input
-								id="memory-date"
+								id="entry-date"
 								type="datetime-local"
 								value={selectedDate}
 								onChange={(e) => setSelectedDate(e.target.value)}
@@ -151,7 +151,7 @@ export default function MemoryModal({
 
 						<div>
 							<label
-								htmlFor="memory-tags"
+								htmlFor="entry-tags"
 								className="block text-sm font-medium text-card-foreground mb-2"
 							>
 								Tags
@@ -197,7 +197,7 @@ export default function MemoryModal({
 							) : isEditing ? (
 								"Save Changes"
 							) : (
-								"Save Memory"
+								"Save Journal Entry"
 							)}
 						</button>
 					</div>

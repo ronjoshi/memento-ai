@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { DisplayMessage } from "@/types";
 import { formatDate } from "@/utils/date";
-import MemoryPill from "./MemoryPill";
+import JournalPill from "./JournalPill";
 
 interface ChatMessageProps {
 	message: DisplayMessage;
@@ -11,8 +11,8 @@ interface ChatMessageProps {
 
 export default function ChatMessage({ message }: ChatMessageProps) {
 	const isUser = message.role === "user";
-	const hasMemories =
-		message.attachedMemories && message.attachedMemories.length > 0;
+	const hasJournals =
+		message.attachedJournals && message.attachedJournals.length > 0;
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
@@ -32,11 +32,11 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 			<div
 				className={`flex flex-col ${isUser ? "items-end" : "items-start"} max-w-[80%]`}
 			>
-				{/* Memory pills above assistant message */}
-				{!isUser && hasMemories && (
+				{/* Journal pills above assistant message */}
+				{!isUser && hasJournals && (
 					<div className="flex flex-col gap-1 mb-1">
-						{message.attachedMemories!.map((memory) => (
-							<MemoryPill key={memory.id} memory={memory} />
+						{message.attachedJournals!.map((entry) => (
+							<JournalPill key={entry.id} entry={entry} />
 						))}
 					</div>
 				)}

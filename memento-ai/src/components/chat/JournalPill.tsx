@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { MemoryReference } from "@/types";
+import { JournalReference } from "@/types";
 import { formatDate } from "@/utils/date";
 
-interface MemoryPillProps {
-	memory: MemoryReference;
+interface JournalPillProps {
+	entry: JournalReference;
 }
 
-export default function MemoryPill({ memory }: MemoryPillProps) {
+export default function JournalPill({ entry }: JournalPillProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [mounted, setMounted] = useState(false);
 
@@ -17,11 +17,11 @@ export default function MemoryPill({ memory }: MemoryPillProps) {
 		setMounted(true);
 	}, []);
 
-	// Truncate memory content for pill display
+	// Truncate journal entry content for pill display
 	const truncatedContent =
-		memory.memoryData.length > 40
-			? memory.memoryData.slice(0, 40) + "..."
-			: memory.memoryData;
+		entry.journalData.length > 40
+			? entry.journalData.slice(0, 40) + "..."
+			: entry.journalData;
 
 	return (
 		<>
@@ -63,13 +63,13 @@ export default function MemoryPill({ memory }: MemoryPillProps) {
 								{/* Content */}
 								<div className="px-6 py-5">
 									<h3 className="text-lg font-semibold text-card-foreground mb-2">
-										Memory
+										Journal Entry
 									</h3>
 									<p className="text-sm text-foreground whitespace-pre-wrap">
-										{memory.memoryData}
+										{entry.journalData}
 									</p>
 									<p className="text-xs text-muted-foreground mt-3">
-										{formatDate(memory.createdAt)}
+										{formatDate(entry.createdAt)}
 									</p>
 								</div>
 

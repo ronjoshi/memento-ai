@@ -1,8 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {
-	MemorySummaryResponse,
-	SearchMemoriesResponse,
-	MemorySearchParams,
+	JournalSummaryResponse,
+	SearchJournalsResponse,
+	JournalSearchParams,
 } from "@/types";
 
 export class EdgeFunctionService {
@@ -12,7 +12,7 @@ export class EdgeFunctionService {
 		this.supabase = supabase;
 	}
 
-	async summarizeMemories(): Promise<MemorySummaryResponse> {
+	async summarizeJournals(): Promise<JournalSummaryResponse> {
 		const {
 			data: { user },
 		} = await this.supabase.auth.getUser();
@@ -34,20 +34,20 @@ export class EdgeFunctionService {
 			throw error;
 		}
 
-		return data as MemorySummaryResponse;
+		return data as JournalSummaryResponse;
 	}
 
-	async searchMemories(
+	async searchJournals(
 		query: string,
 		matchCount: number = 5,
 		startTime?: string,
 		endTime?: string,
-	): Promise<SearchMemoriesResponse> {
+	): Promise<SearchJournalsResponse> {
 		if (!query || query.trim() === "") {
 			throw new Error("Query cannot be empty");
 		}
 
-		const requestBody: MemorySearchParams = {
+		const requestBody: JournalSearchParams = {
 			query,
 			matchCount,
 			startTime,
@@ -65,6 +65,6 @@ export class EdgeFunctionService {
 			throw error;
 		}
 
-		return data as SearchMemoriesResponse;
+		return data as SearchJournalsResponse;
 	}
 }

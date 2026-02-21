@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-// POST: Search memories using semantic search
+// POST: Search journal entries using semantic search
 export async function POST(request: NextRequest) {
 	try {
 		const supabase = await createClient();
@@ -44,21 +44,21 @@ export async function POST(request: NextRequest) {
 		}
 
 		// Transform results to camelCase
-		const memories = (data?.data || []).map((item: any) => ({
+		const journals = (data?.data || []).map((item: any) => ({
 			id: item.id,
 			userId: item.user_id,
-			memoryData: item.memory_data,
+			journalData: item.memory_data,
 			tagIds: item.tag_ids || [],
 			createdAt: item.created_at,
 		}));
 
 		return NextResponse.json({
-			memories,
+			journals,
 			query: data?.query || query,
-			matchCount: data?.matchCount || memories.length,
+			matchCount: data?.matchCount || journals.length,
 		});
 	} catch (error) {
-		console.error("Error searching memories:", error);
+		console.error("Error searching journal entries:", error);
 		return NextResponse.json(
 			{
 				error:

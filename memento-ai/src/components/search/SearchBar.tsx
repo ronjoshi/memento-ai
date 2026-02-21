@@ -44,7 +44,7 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
 					type="text"
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
-					placeholder="Search your memories..."
+					placeholder="Search your journal..."
 					className="block w-full pl-12 pr-24 py-3 border border-border rounded-xl bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
 					disabled={isLoading}
 				/>

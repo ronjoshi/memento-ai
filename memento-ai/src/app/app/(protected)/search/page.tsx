@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Memory } from "@/types";
+import { JournalEntry } from "@/types";
 import SearchBar from "@/components/search/SearchBar";
 import SearchResults from "@/components/search/SearchResults";
 
 export default function SearchPage() {
 	const router = useRouter();
-	const [memories, setMemories] = useState<Memory[]>([]);
+	const [entries, setEntries] = useState<JournalEntry[]>([]);
 	const [query, setQuery] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasSearched, setHasSearched] = useState(false);
@@ -34,7 +34,7 @@ export default function SearchPage() {
 				throw new Error(data.error || "Search failed");
 			}
 
-			setMemories(data.memories);
+			setEntries(data.journals);
 			setHasSearched(true);
 		} catch (err) {
 			console.error("Search error:", err);
@@ -51,7 +51,7 @@ export default function SearchPage() {
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 					<div className="flex items-center justify-between">
 						<button
-							onClick={() => router.push("/app/memories")}
+							onClick={() => router.push("/app/journals")}
 							className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
 						>
 							<svg
@@ -96,7 +96,7 @@ export default function SearchPage() {
 			{/* Results */}
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
 				<SearchResults
-					memories={memories}
+					entries={entries}
 					query={query}
 					isLoading={isLoading}
 					hasSearched={hasSearched}

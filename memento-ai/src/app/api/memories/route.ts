@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { generateEmbedding } from "@/services/embeddings";
 import { NextRequest, NextResponse } from "next/server";
 
-// GET: Fetch memories for authenticated user (with tags), paginated
+// GET: Fetch journal entries for authenticated user (with tags), paginated
 export async function GET(request: NextRequest) {
 	try {
 		const supabase = await createClient();
@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
 		);
 		const offset = parseInt(searchParams.get("offset") || "0", 10);
 
-		// Fetch paginated memories, total count, and tags
-		const [memoriesResult, countResult, tagsResult] = await Promise.all([
+		// Fetch paginated journal entries, total count, and tags
+		const [journalsResult, countResult, tagsResult] = await Promise.all([
 			supabase
 				.from("memories")
 				.select("*")
@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
 			supabase.from("tags").select("*").eq("user_id", user.id),
 		]);
 
-		if (memoriesResult.error) {
-			console.error("Error fetching memories:", memoriesResult.error);
+		if (journalsResult.error) {
+			console.error("Error fetching journal entries:", journalsResult.error);
 			return NextResponse.json(
-				{ error: memoriesResult.error.message },
+				{ error: journalsResult.error.message },
 				{ status: 500 },
 			);
 		}
@@ -64,10 +64,10 @@ export async function GET(request: NextRequest) {
 		}
 
 		// Transform to camelCase and resolve tag_ids to full tag objects
-		const memories = (memoriesResult.data || []).map((item) => ({
+		const journals = (journalsResult.data || []).map((item) => ({
 			id: item.id,
 			userId: item.user_id,
-			memoryData: item.memory_data,
+			journalData: item.memory_data,
 			createdAt: item.created_at,
 			tagIds: item.tag_ids || [],
 			tags: (item.tag_ids || [])
@@ -78,12 +78,12 @@ export async function GET(request: NextRequest) {
 		const total = countResult.count ?? 0;
 
 		return NextResponse.json({
-			memories,
+			journals,
 			total,
 			hasMore: offset + limit < total,
 		});
 	} catch (error) {
-		console.error("Error fetching memories:", error);
+		console.error("Error fetching journal entries:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
 			{ status: 500 },
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
 	}
 }
 
-// POST: Create new memory with embedding and tags
+// POST: Create new journal entry with embedding and tags
 export async function POST(request: NextRequest) {
 	try {
 		const supabase = await createClient();
@@ -108,11 +108,11 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const { memoryData, tagIds, createdAt } = await request.json();
+		const { journalData, tagIds, createdAt } = await request.json();
 
-		if (!memoryData) {
+		if (!journalData) {
 			return NextResponse.json(
-				{ error: "Memory content is required" },
+				{ error: "Journal entry content is required" },
 				{ status: 400 },
 			);
 		}
@@ -124,15 +124,15 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		// Generate embedding for the memory content
-		const embedding = await generateEmbedding(memoryData);
+		// Generate embedding for the journal entry content
+		const embedding = await generateEmbedding(journalData);
 		console.log(`Generated embedding with ${embedding.length} dimensions`);
 
 		const { data, error } = await supabase
 			.from("memories")
 			.insert({
 				user_id: user.id,
-				memory_data: memoryData,
+				memory_data: journalData,
 				tag_ids: tagIds,
 				embedding: embedding,
 				created_at: createdAt || new Date().toISOString(),
@@ -145,17 +145,17 @@ export async function POST(request: NextRequest) {
 		}
 
 		return NextResponse.json({
-			memory: {
+			journal: {
 				id: data.id,
 				userId: data.user_id,
-				memoryData: data.memory_data,
+				journalData: data.memory_data,
 				createdAt: data.created_at,
 				tagIds: data.tag_ids || [],
 				tags: [],
 			},
 		});
 	} catch (error) {
-		console.error("Error creating memory:", error);
+		console.error("Error creating journal entry:", error);
 		return NextResponse.json(
 			{
 				error:

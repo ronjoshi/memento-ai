@@ -2,7 +2,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
-import { Memory, MemorySearchParams, RawSearchResult } from "../common/types.ts";
+import { JournalEntry, JournalSearchParams, RawSearchResult } from "../common/types.ts";
 
 /**
  * Validates and formats an ISO 8601 timestamp string for PostgreSQL.
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
 			matchCount = 5,
 			startTime,
 			endTime,
-		}: MemorySearchParams = await req.json();
+		}: JournalSearchParams = await req.json();
 
 		if (!query || query.trim().length === 0) {
 			return new Response(
@@ -183,8 +183,8 @@ Deno.serve(async (req) => {
 		}
 
 		// Map and clean the search results to match the expected format
-		const cleanedResults: Memory[] = (data || []).map(
-			(result: RawSearchResult): Memory => ({
+		const cleanedResults: JournalEntry[] = (data || []).map(
+			(result: RawSearchResult): JournalEntry => ({
 				id: result.id,
 				user_id: result.user_id,
 				memory_data: result.memory_data,

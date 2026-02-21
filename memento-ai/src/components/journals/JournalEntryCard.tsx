@@ -1,28 +1,28 @@
 "use client";
 
-import { Memory } from "@/types";
+import { JournalEntry } from "@/types";
 import { formatDate } from "@/utils/date";
 import TagBadge from "@/components/tags/TagBadge";
 
-interface MemoryCardProps {
-	memory: Memory;
-	onEdit?: (memory: Memory) => void;
-	onDelete?: (memory: Memory) => void;
+interface JournalEntryCardProps {
+	entry: JournalEntry;
+	onEdit?: (entry: JournalEntry) => void;
+	onDelete?: (entry: JournalEntry) => void;
 }
 
-export default function MemoryCard({ memory, onEdit, onDelete }: MemoryCardProps) {
-	const hasTags = memory.tags && memory.tags.length > 0;
+export default function JournalEntryCard({ entry, onEdit, onDelete }: JournalEntryCardProps) {
+	const hasTags = entry.tags && entry.tags.length > 0;
 
 	return (
 		<div className="bg-card rounded-xl shadow-sm border border-card-border p-4 hover:shadow-md hover:border-primary/20 transition-all duration-200 group">
 			<div className="flex justify-between items-start gap-2">
 				<p className="text-card-foreground text-base leading-relaxed mb-3 flex-1 line-clamp-3">
-					{memory.memoryData}
+					{entry.journalData}
 				</p>
 				<div className="flex items-center gap-1">
 					{onEdit && (
 						<button
-							onClick={() => onEdit(memory)}
+							onClick={() => onEdit(entry)}
 							className="p-1.5 text-muted-foreground hover:text-primary rounded-lg transition-colors"
 							title="Edit"
 						>
@@ -43,7 +43,7 @@ export default function MemoryCard({ memory, onEdit, onDelete }: MemoryCardProps
 					)}
 					{onDelete && (
 						<button
-							onClick={() => onDelete(memory)}
+							onClick={() => onDelete(entry)}
 							className="p-1.5 text-muted-foreground hover:text-error rounded-lg transition-colors"
 							title="Delete"
 						>
@@ -67,13 +67,13 @@ export default function MemoryCard({ memory, onEdit, onDelete }: MemoryCardProps
 			<div className="flex items-center justify-between">
 				<div className="flex flex-wrap gap-1">
 					{hasTags
-						? memory.tags!.map((tag) => (
+						? entry.tags!.map((tag) => (
 								<TagBadge key={tag.id} tag={tag} size="sm" />
 							))
 						: null}
 				</div>
 				<span className="text-xs text-muted-foreground">
-					{formatDate(memory.createdAt)}
+					{formatDate(entry.createdAt)}
 				</span>
 			</div>
 		</div>

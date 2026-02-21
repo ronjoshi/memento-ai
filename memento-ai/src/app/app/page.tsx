@@ -7,7 +7,7 @@ export default function AppPage() {
 	const router = useRouter();
 
 	useEffect(() => {
-		router.replace("/app/memories");
+		router.replace("/app/journals");
 	}, [router]);
 
 	return (

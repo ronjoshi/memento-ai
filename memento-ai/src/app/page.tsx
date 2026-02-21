@@ -32,7 +32,7 @@ export default function AboutPage() {
 						<div className="flex items-center space-x-4">
 							{isSignedIn ? (
 								<button
-									onClick={() => router.push("/app/memories")}
+									onClick={() => router.push("/app/journals")}
 									className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
 								>
 									Go to App
@@ -62,14 +62,14 @@ export default function AboutPage() {
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 				<div className="text-center">
 					<h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-						Your Personal Memory Vault
+						Your Personal Journal
 					</h2>
 					<p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-						Memento AI helps you store, organize, and recall your memories with the power of AI.
+						Memento AI helps you store, organize, and recall your journal entries with the power of AI.
 						Never forget important moments, ideas, or information again.
 					</p>
 					<button
-						onClick={() => router.push(isSignedIn ? "/app/memories" : "/login")}
+						onClick={() => router.push(isSignedIn ? "/app/journals" : "/login")}
 						className="px-8 py-3 text-lg font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
 					>
 						{isSignedIn ? "Open App" : "Get Started"}
@@ -95,10 +95,10 @@ export default function AboutPage() {
 							</svg>
 						</div>
 						<h3 className="text-lg font-semibold text-foreground mb-2">
-							Store Memories
+							Store Journal Entries
 						</h3>
 						<p className="text-muted-foreground">
-							Capture and store your thoughts, ideas, and experiences in a secure, personal vault.
+							Capture and store your thoughts, ideas, and experiences in a secure, personal journal.
 						</p>
 					</div>
 
@@ -146,7 +146,7 @@ export default function AboutPage() {
 							AI Chat
 						</h3>
 						<p className="text-muted-foreground">
-							Chat with an AI that knows your memories and can help you recall information.
+							Chat with an AI that knows your journal and can help you recall information.
 						</p>
 					</div>
 				</div>
@@ -156,7 +156,7 @@ export default function AboutPage() {
 			<footer className="border-t border-border mt-24">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 					<p className="text-center text-muted-foreground text-sm">
-						Memento AI - Your personal memory vault
+						Memento AI - Your personal journal
 					</p>
 				</div>
 			</footer>

@@ -1,27 +1,27 @@
 "use client";
 
-import { Memory } from "@/types";
-import MemoryCard from "./MemoryCard";
+import { JournalEntry } from "@/types";
+import JournalEntryCard from "./JournalEntryCard";
 
-interface MemoryListProps {
-	memories: Memory[];
+interface JournalEntryListProps {
+	entries: JournalEntry[];
 	isLoading: boolean;
 	isLoadingMore?: boolean;
 	hasMore?: boolean;
 	onLoadMore?: () => void;
-	onEdit?: (memory: Memory) => void;
-	onDelete?: (memory: Memory) => void;
+	onEdit?: (entry: JournalEntry) => void;
+	onDelete?: (entry: JournalEntry) => void;
 }
 
-export default function MemoryList({
-	memories,
+export default function JournalEntryList({
+	entries,
 	isLoading,
 	isLoadingMore = false,
 	hasMore = false,
 	onLoadMore,
 	onEdit,
 	onDelete,
-}: MemoryListProps) {
+}: JournalEntryListProps) {
 	if (isLoading) {
 		return (
 			<div className="space-y-4">
@@ -42,7 +42,7 @@ export default function MemoryList({
 		);
 	}
 
-	if (memories.length === 0) {
+	if (entries.length === 0) {
 		return (
 			<div className="text-center py-12">
 				<div className="text-muted-foreground mb-4">
@@ -61,10 +61,10 @@ export default function MemoryList({
 					</svg>
 				</div>
 				<h3 className="text-lg font-medium text-foreground mb-1">
-					No memories yet
+					No journal entries yet
 				</h3>
 				<p className="text-muted-foreground">
-					Create your first memory to get started.
+					Create your first journal entry to get started.
 				</p>
 			</div>
 		);
@@ -72,10 +72,10 @@ export default function MemoryList({
 
 	return (
 		<div className="space-y-4">
-			{memories.map((memory) => (
-				<MemoryCard
-					key={memory.id}
-					memory={memory}
+			{entries.map((entry) => (
+				<JournalEntryCard
+					key={entry.id}
+					entry={entry}
 					onEdit={onEdit}
 					onDelete={onDelete}
 				/>

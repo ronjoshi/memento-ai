@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DatabaseService } from "@/services/database";
 import { NextRequest, NextResponse } from "next/server";
 
-// POST: Search memories by tag IDs (any overlap) and/or date range
+// POST: Search journal entries by tag IDs (any overlap) and/or date range
 export async function POST(request: NextRequest) {
 	try {
 		const supabase = await createClient();
@@ -36,15 +36,15 @@ export async function POST(request: NextRequest) {
 		}
 
 		const databaseService = new DatabaseService(supabase);
-		const memories = await databaseService.filterMemories({
+		const journals = await databaseService.filterJournals({
 			tagIds: hasTagIds ? tagIds : undefined,
 			startTime: hasStart ? startTime : undefined,
 			endTime: hasEnd ? endTime : undefined,
 		});
 
-		return NextResponse.json({ memories });
+		return NextResponse.json({ journals });
 	} catch (error) {
-		console.error("Error searching memories by tag/date:", error);
+		console.error("Error searching journal entries by tag/date:", error);
 		return NextResponse.json(
 			{
 				error:

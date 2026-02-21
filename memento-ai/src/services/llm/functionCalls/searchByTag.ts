@@ -1,13 +1,13 @@
 import { FunctionDefinition } from "@/services/llm/types";
-import { Memory } from "@/types";
+import { JournalEntry } from "@/types";
 
 /**
- * Tool definition for searching user memories by tag names and optional date range
+ * Tool definition for searching user journal entries by tag names and optional date range
  */
 export const SEARCH_BY_TAG_TOOL: FunctionDefinition = {
 	name: "search_by_tag",
 	description:
-		"Search the user's memories by tag labels — categories the user has applied to their memories. Use this when the user references a specific topic, person, place, or category (e.g. 'work memories', 'family stuff', 'travel', 'fitness'). Guess tag names from context — for 'family trip' try ['family', 'travel']; for 'work stuff' try ['work']. Unmatched tag names are handled gracefully, so don't be conservative. Can be combined with keyword search for thorough recall.",
+		"Search the user's journal entries by tag labels — categories the user has applied to their journal entries. Use this when the user references a specific topic, person, place, or category (e.g. 'work entries', 'family stuff', 'travel', 'fitness'). Guess tag names from context — for 'family trip' try ['family', 'travel']; for 'work stuff' try ['work']. Unmatched tag names are handled gracefully, so don't be conservative. Can be combined with keyword search for thorough recall.",
 	parameters: {
 		type: "object",
 		properties: {
@@ -15,7 +15,7 @@ export const SEARCH_BY_TAG_TOOL: FunctionDefinition = {
 				type: "array",
 				items: { type: "string" },
 				description:
-					"List of tag names to search for. Infer these from the user's query — use lowercase, single-word or short labels (e.g. ['work', 'travel', 'family']). Memories matching at least one tag will be returned. It's safe to include multiple guesses.",
+					"List of tag names to search for. Infer these from the user's query — use lowercase, single-word or short labels (e.g. ['work', 'travel', 'family']). Journal entries matching at least one tag will be returned. It's safe to include multiple guesses.",
 			},
 			startTime: {
 				type: "string",
@@ -68,7 +68,7 @@ export async function executeSearchByTag(
 			return JSON.stringify({
 				success: true,
 				message: `No tags found matching: ${args.tagNames.join(", ")}`,
-				memories: [],
+				journals: [],
 			});
 		}
 
@@ -90,29 +90,29 @@ export async function executeSearchByTag(
 		}
 
 		const searchData = await searchResponse.json();
-		const memories: Memory[] = searchData.memories || [];
+		const entries: JournalEntry[] = searchData.journals || [];
 
-		if (memories.length === 0) {
+		if (entries.length === 0) {
 			return JSON.stringify({
 				success: true,
-				message: "No memories found matching the given tags and date range.",
-				memories: [],
+				message: "No journal entries found matching the given tags and date range.",
+				journals: [],
 			});
 		}
 
-		// Format memories for the LLM
-		const formattedMemories = memories.map((memory) => ({
-			id: memory.id,
-			memoryData: memory.memoryData,
-			tagIds: memory.tagIds || [],
-			createdAt: memory.createdAt,
-			userId: memory.userId,
+		// Format journal entries for the LLM
+		const formattedJournals = entries.map((entry) => ({
+			id: entry.id,
+			journalData: entry.journalData,
+			tagIds: entry.tagIds || [],
+			createdAt: entry.createdAt,
+			userId: entry.userId,
 		}));
 
 		return JSON.stringify({
 			success: true,
-			message: `Found ${memories.length} memories matching tags: ${args.tagNames.join(", ")}`,
-			memories: formattedMemories,
+			message: `Found ${entries.length} journal entries matching tags: ${args.tagNames.join(", ")}`,
+			journals: formattedJournals,
 		});
 	} catch (error) {
 		console.error("Error executing search_by_tag:", error);
@@ -121,8 +121,8 @@ export async function executeSearchByTag(
 			message:
 				error instanceof Error
 					? error.message
-					: "Failed to search memories by tag",
-			memories: [],
+					: "Failed to search journal entries by tag",
+			journals: [],
 		});
 	}
 }

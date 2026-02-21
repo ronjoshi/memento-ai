@@ -2,9 +2,9 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 import { llmService } from "../../services/llmService.js";
-import { Memory, Tag } from "../common/types.ts";
+import { JournalEntry, Tag } from "../common/types.ts";
 
-interface MemoryWithTag extends Memory {
+interface JournalEntryWithTag extends JournalEntry {
 	tags: Tag[];
 }
 
@@ -54,20 +54,20 @@ Deno.serve(async (req) => {
 
 		switch (action) {
 			case "summarizeMemories": {
-				// Fetch all user memories
-				const { data: memories, error } = await supabase
+				// Fetch all user journal entries
+				const { data: entries, error } = await supabase
 					.from("memories")
 					.select("memory_data, tag, created_at")
 					.eq("user_id", user.id);
 
 				if (error) throw error;
 
-				if (!memories || memories.length === 0) {
+				if (!entries || entries.length === 0) {
 					return new Response(
 						JSON.stringify({
 							data: {
-								summary: "No memories found for this user.",
-								totalMemories: 0,
+								summary: "No journal entries found for this user.",
+								totalJournals: 0,
 							},
 						}),
 						{
@@ -76,18 +76,18 @@ Deno.serve(async (req) => {
 					);
 				}
 
-				// Format memories for LLM processing
-				const memoryText = memories
+				// Format journal entries for LLM processing
+				const entryText = entries
 					.map(
-						(memory) =>
-							`Memory (${memory.tag}): ${memory.memory_data} [Created: ${memory.created_at}]`,
+						(entry) =>
+							`Journal Entry (${entry.tag}): ${entry.memory_data} [Created: ${entry.created_at}]`,
 					)
 					.join("\n\n");
 
 				// Generate summary using LLM
-				const prompt = `Please provide a comprehensive summary of the following user memories. Focus on key themes, patterns, and important information:
+				const prompt = `Please provide a comprehensive summary of the following user journal entries. Focus on key themes, patterns, and important information:
 
-${memoryText}
+${entryText}
 
 Summary:`;
 
@@ -101,7 +101,7 @@ Summary:`;
 						JSON.stringify({
 							data: {
 								summary,
-								totalMemories: memories.length,
+								totalJournals: entries.length,
 							},
 						}),
 						{
@@ -112,7 +112,7 @@ Summary:`;
 					console.error("LLM Error:", llmError);
 					return new Response(
 						JSON.stringify({
-							error: "Failed to generate memory summary",
+							error: "Failed to generate journal summary",
 							details: llmError,
 						}),
 						{
