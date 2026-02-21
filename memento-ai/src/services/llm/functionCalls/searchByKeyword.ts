@@ -6,14 +6,14 @@ import { FunctionDefinition } from "@/services/llm/types";
 export const SEARCH_BY_KEYWORD_TOOL: FunctionDefinition = {
 	name: "search_by_keyword",
 	description:
-		"Search the user's journal entries using semantic (embedding-based) search. This finds journal entries by meaning and concept, not just exact word matches — making it ideal for open-ended, feeling-based, or narrative queries like 'times I felt proud', 'what I was working on last year', or 'something about my dog'. Prefer this tool for abstract or exploratory questions. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
+		"Search the user's journal entries using vector similarity (RAG). The query is embedded and compared against stored journal embeddings via cosine similarity, so the query should be phrased as descriptive statements resembling the content you expect to find — NOT as a question. For example, use 'feeling proud of an accomplishment at work' instead of 'when did I feel proud?'. Pack the query with relevant keywords and context to maximize vector overlap. Prefer this tool for open-ended, feeling-based, or conceptual lookups. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
 	parameters: {
 		type: "object",
 		properties: {
 			query: {
 				type: "string",
 				description:
-					"A natural language query describing what you're looking for. Should capture the concept or meaning of what the user is asking about — not necessarily their exact words.",
+					"A descriptive, keyword-rich statement written to resemble the journal content you expect to match. Since this is embedded and compared via cosine similarity, phrase it as a statement (not a question) packed with topical words and context. E.g. 'hiking trip in the mountains with friends, feeling adventurous and free' rather than 'did I go hiking?'.",
 			},
 			startTime: {
 				type: "string",
