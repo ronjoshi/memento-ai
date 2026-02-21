@@ -31,6 +31,7 @@ export default function TagSelector({
 	const [searchQuery, setSearchQuery] = useState("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const dropdownContentRef = useRef<HTMLDivElement>(null);
 
 	const MAX_TAGS = 50;
 
@@ -129,7 +130,7 @@ export default function TagSelector({
 
 			{/* Dropdown */}
 			{isOpen && !disabled && (
-				<div className="absolute z-50 mt-2 w-full bg-card border border-card-border rounded-xl shadow-lg overflow-hidden">
+				<div ref={dropdownContentRef} className="absolute z-50 mt-2 w-full bg-card border border-card-border rounded-xl shadow-lg overflow-hidden max-h-96 overflow-y-auto">
 					{/* Search input */}
 					<div className="p-2 border-b border-border">
 						<input
@@ -270,7 +271,17 @@ export default function TagSelector({
 						) : (
 							<button
 								type="button"
-								onClick={() => setIsCreating(true)}
+								onClick={() => {
+									setNewTagName(searchQuery);
+									setSearchQuery("");
+									setIsCreating(true);
+									setTimeout(() => {
+										dropdownContentRef.current?.scrollTo({
+											top: dropdownContentRef.current.scrollHeight,
+											behavior: "smooth",
+										});
+									}, 0);
+								}}
 								className="w-full flex items-center gap-2 px-3 py-2 text-sm text-primary hover:bg-secondary/10 rounded-lg"
 							>
 								<svg

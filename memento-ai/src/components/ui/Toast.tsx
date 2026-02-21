@@ -19,7 +19,7 @@ export default function Toast({ message, isVisible, onClose }: ToastProps) {
 	if (!isVisible) return null;
 
 	return (
-		<div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] animate-fade-in">
+		<div className="fixed top-6 left-1/2 z-[100] animate-fade-in" style={{ transform: "translateX(-50%)" }}>
 			<div className="px-5 py-3 bg-card border border-card-border rounded-xl shadow-lg text-sm text-foreground">
 				{message}
 			</div>
