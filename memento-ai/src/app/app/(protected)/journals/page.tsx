@@ -4,13 +4,16 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTestAccount } from "@/hooks/useTestAccount";
 import { JournalEntry, Tag, TagColor } from "@/types";
 import JournalEntryList from "@/components/journals/JournalEntryList";
 import JournalEntryModal from "@/components/journals/JournalEntryModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import Toast from "@/components/ui/Toast";
 
 export default function JournalsPage() {
 	const { signOut } = useAuth();
+	const { isTestAccount, toastVisible, toastMessage, showToast, hideToast } = useTestAccount();
 	const router = useRouter();
 	const PAGE_SIZE = 50;
 	const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -114,11 +117,19 @@ export default function JournalsPage() {
 	};
 
 	const handleEditJournal = (entry: JournalEntry) => {
+		if (isTestAccount) {
+			showToast();
+			return;
+		}
 		setEditingEntry(entry);
 		setShowModal(true);
 	};
 
 	const handleDeleteJournal = (entry: JournalEntry) => {
+		if (isTestAccount) {
+			showToast();
+			return;
+		}
 		setDeletingEntry(entry);
 	};
 
@@ -151,6 +162,10 @@ export default function JournalsPage() {
 	};
 
 	const handleOpenAddModal = () => {
+		if (isTestAccount) {
+			showToast();
+			return;
+		}
 		setEditingEntry(null);
 		setShowModal(true);
 	};
@@ -159,6 +174,10 @@ export default function JournalsPage() {
 		name: string,
 		color: TagColor,
 	): Promise<Tag> => {
+		if (isTestAccount) {
+			showToast();
+			throw new Error("Disabled for test account");
+		}
 		const response = await fetch("/api/tags", {
 			method: "POST",
 			headers: {
@@ -178,6 +197,10 @@ export default function JournalsPage() {
 	};
 
 	const handleDeleteTag = async (tagId: number): Promise<void> => {
+		if (isTestAccount) {
+			showToast();
+			return;
+		}
 		const response = await fetch(`/api/tags/${tagId}`, {
 			method: "DELETE",
 		});
@@ -197,6 +220,13 @@ export default function JournalsPage() {
 
 	return (
 		<div className="min-h-screen bg-background">
+			{/* Toast notification */}
+			<Toast
+				message={toastMessage}
+				isVisible={toastVisible}
+				onClose={hideToast}
+			/>
+
 			{/* Header */}
 			<header className="bg-card shadow-sm border-b border-card-border">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
