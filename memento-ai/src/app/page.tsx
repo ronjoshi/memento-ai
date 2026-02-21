@@ -1,12 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AboutPage() {
-	const { isSignedIn } = useAuth();
+	const { isSignedIn, signIn } = useAuth();
 	const router = useRouter();
+	const [isSampleLoading, setIsSampleLoading] = useState(false);
+
+	const handleTestLogin = async () => {
+		setIsSampleLoading(true);
+		try {
+			await signIn("sample@mementoai.com", "sample@mementoai.com");
+			router.push("/app/journals");
+		} catch {
+			setIsSampleLoading(false);
+		}
+	};
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -68,12 +80,21 @@ export default function AboutPage() {
 						Memento AI helps you store, organize, and recall your journal entries with the power of AI.
 						Never forget important moments, ideas, or information again.
 					</p>
-					<button
-						onClick={() => router.push(isSignedIn ? "/app/journals" : "/login")}
-						className="px-8 py-3 text-lg font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
-					>
-						{isSignedIn ? "Open App" : "Get Started"}
-					</button>
+					<div className="flex flex-col items-center gap-3">
+						<button
+							onClick={() => router.push(isSignedIn ? "/app/journals" : "/login")}
+							className="px-8 py-3 text-lg font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
+						>
+							{isSignedIn ? "Open App" : "Get Started"}
+						</button>
+						<button
+							onClick={handleTestLogin}
+							disabled={isSampleLoading}
+							className="px-6 py-2 text-sm font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors disabled:opacity-50"
+						>
+							{isSampleLoading ? "Signing in..." : "Try as Sample User"}
+						</button>
+					</div>
 				</div>
 
 				{/* Features Section */}

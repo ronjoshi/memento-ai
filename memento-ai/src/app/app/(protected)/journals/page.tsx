@@ -230,24 +230,30 @@ export default function JournalsPage() {
 			{/* Header */}
 			<header className="bg-card shadow-sm border-b border-card-border">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-					<div className="flex justify-between items-center">
-						<button
-							onClick={() => router.push("/")}
-							className="flex items-center gap-2"
-						>
-							<Image
-								src="/memento_logo.svg"
-								alt="Memento"
-								width={40}
-								height={40}
-								className="logo-cyan"
-							/>
-							<h1 className="text-xl font-bold text-primary">
-								Journal
-							</h1>
-						</button>
+					<div className="flex items-center">
+						{/* Left: Logo (links home) */}
+						<div className="flex-1">
+							<button
+								onClick={() => router.push("/")}
+								className="flex items-center gap-2"
+							>
+								<Image
+									src="/memento_logo.svg"
+									alt="Memento"
+									width={40}
+									height={40}
+									className="logo-cyan"
+								/>
+							</button>
+						</div>
 
-						<div className="flex items-center space-x-3">
+						{/* Center: Page title */}
+						<h1 className="text-xl font-bold text-primary">
+							Journals
+						</h1>
+
+						{/* Right: Action buttons */}
+						<div className="flex-1 flex items-center justify-end space-x-3">
 							<button
 								onClick={() => router.push("/app/chat")}
 								className="flex flex-col items-center gap-0.5 p-2 hover:opacity-80 transition-opacity"
@@ -260,27 +266,6 @@ export default function JournalsPage() {
 									height={20}
 								/>
 								<span className="text-[9px] text-muted-foreground leading-none">Chat</span>
-							</button>
-
-							<button
-								onClick={handleOpenAddModal}
-								className="flex flex-col items-center gap-0.5 p-2 text-muted-foreground hover:text-primary transition-colors"
-								title="Add Journal Entry"
-							>
-								<svg
-									className="w-5 h-5"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M12 4v16m8-8H4"
-									/>
-								</svg>
-								<span className="text-[9px] leading-none">New</span>
 							</button>
 
 							<button
@@ -308,8 +293,31 @@ export default function JournalsPage() {
 				</div>
 			</header>
 
+			{/* New Journal Button */}
+			<div className="flex justify-center py-6">
+				<button
+					onClick={handleOpenAddModal}
+					className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors"
+				>
+					<svg
+						className="w-5 h-5"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M12 4v16m8-8H4"
+						/>
+					</svg>
+					New Journal Entry
+				</button>
+			</div>
+
 			{/* Main Content */}
-			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
 				<JournalEntryList
 					entries={entries}
 					isLoading={isLoading}

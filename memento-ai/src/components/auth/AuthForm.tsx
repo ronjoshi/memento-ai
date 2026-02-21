@@ -47,7 +47,13 @@ export default function AuthForm() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-background px-4">
+		<div className="min-h-screen flex items-center justify-center bg-background px-4 relative">
+			<button
+				onClick={() => router.push("/")}
+				className="absolute top-6 left-6 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+			>
+				&larr; Home
+			</button>
 			<div className="max-w-md w-full space-y-8">
 				<div className="text-center">
 					<Image
