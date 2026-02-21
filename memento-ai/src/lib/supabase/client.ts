@@ -1,11 +1,9 @@
 // Browser-side Supabase client for client components
 import { createBrowserClient } from "@supabase/ssr";
+import { supabaseUrl, supabaseAnonKey } from "./config";
 
 export function createClient() {
-	return createBrowserClient(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-	);
+	return createBrowserClient(supabaseUrl, supabaseAnonKey);
 }
 
 // Singleton instance for browser usage
