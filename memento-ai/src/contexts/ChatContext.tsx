@@ -5,6 +5,7 @@ import {
 	useContext,
 	useState,
 	useCallback,
+	useRef,
 	ReactNode,
 } from "react";
 import { ConversationMessage, ToolCall, LLMResponse } from "@/types";
@@ -58,6 +59,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 	const [conversationId, setConversationId] = useState(() =>
 		crypto.randomUUID(),
 	);
+	const messagesRef = useRef<ConversationMessage[]>([]);
+
+	// Helper to update both state and ref in sync
+	const updateMessages = useCallback((msgs: ConversationMessage[]) => {
+		messagesRef.current = msgs;
+		setMessages(msgs);
+	}, []);
 
 	const sendMessage = useCallback(
 		async (content: string) => {
@@ -69,11 +77,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 				content,
 			);
 
-			let currentMessages: ConversationMessage[] = [];
-			setMessages((prev) => {
-				currentMessages = [...prev, userMessage];
-				return currentMessages;
-			});
+			let currentMessages = [...messagesRef.current, userMessage];
+			updateMessages(currentMessages);
 
 			try {
 				const maxToolIterations = 5;
@@ -109,7 +114,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 						},
 					);
 					currentMessages = [...currentMessages, assistantMessage];
-					setMessages(currentMessages);
+					updateMessages(currentMessages);
 
 					if (!data.tool_calls || data.tool_calls.length === 0) {
 						break;
@@ -143,7 +148,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 							{ tool_call_id: toolCall.id },
 						);
 						currentMessages = [...currentMessages, toolResultMessage];
-						setMessages(currentMessages);
+						updateMessages(currentMessages);
 					}
 				}
 
@@ -157,18 +162,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 					"assistant",
 					"Sorry, I encountered an error. Please try again.",
 				);
-				setMessages((prev) => [...prev, errorMessage]);
+				updateMessages([...messagesRef.current, errorMessage]);
 			} finally {
 				setIsLoading(false);
 			}
 		},
-		[conversationId],
+		[conversationId, updateMessages],
 	);
 
 	const clearChat = useCallback(() => {
-		setMessages([]);
+		updateMessages([]);
 		setConversationId(crypto.randomUUID());
-	}, []);
+	}, [updateMessages]);
 
 	return (
 		<ChatContext.Provider
