@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { TagColor } from "@/types";
+import { TAG_COLORS } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 // PUT: Update tag name or color
@@ -30,23 +30,11 @@ export async function PUT(
 
 		const { name, color } = await request.json();
 
-		const validColors: TagColor[] = [
-			"gray",
-			"brown",
-			"orange",
-			"yellow",
-			"green",
-			"blue",
-			"purple",
-			"pink",
-			"red",
-		];
-
 		const updateData: Record<string, unknown> = {};
 		if (name !== undefined && typeof name === "string" && name.trim()) {
 			updateData.name = name.trim();
 		}
-		if (color !== undefined && validColors.includes(color)) {
+		if (color !== undefined && TAG_COLORS.includes(color)) {
 			updateData.color = color;
 		}
 

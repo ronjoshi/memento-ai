@@ -12,7 +12,7 @@ export default function ColorPicker({
 	onSelect,
 }: ColorPickerProps) {
 	return (
-		<div className="grid grid-cols-3 gap-2 p-2">
+		<div className="grid grid-cols-6 gap-2 p-2">
 			{TAG_COLORS.map((color) => {
 				const colors = TAG_COLOR_CONFIG[color];
 				const isSelected = color === selectedColor;

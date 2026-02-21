@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { TagColor } from "@/types";
+import { TagColor, TAG_COLORS } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET: Fetch all tags for authenticated user
@@ -73,19 +73,7 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const validColors: TagColor[] = [
-			"gray",
-			"brown",
-			"orange",
-			"yellow",
-			"green",
-			"blue",
-			"purple",
-			"pink",
-			"red",
-		];
-
-		const tagColor: TagColor = validColors.includes(color) ? color : "gray";
+		const tagColor: TagColor = TAG_COLORS.includes(color) ? color : "gray";
 
 		const { data, error } = await supabase
 			.from("tags")
