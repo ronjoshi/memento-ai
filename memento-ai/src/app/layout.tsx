@@ -12,6 +12,10 @@ const avenirNext = localFont({
 export const metadata: Metadata = {
 	title: "Memento AI",
 	description: "Personal journal with AI-powered search and recall",
+	icons: {
+		icon: "/favicon.ico",
+		apple: "/favicon.ico",
+	},
 };
 
 export default function RootLayout({
@@ -21,9 +25,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body
-				className={`${avenirNext.className} antialiased`}
-			>
+			<body className={`${avenirNext.className} antialiased`}>
 				<AuthProvider>{children}</AuthProvider>
 			</body>
 		</html>

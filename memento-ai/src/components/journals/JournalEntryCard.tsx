@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import { JournalEntry } from "@/types";
 import { formatDate } from "@/utils/date";
 import TagBadge from "@/components/tags/TagBadge";
@@ -10,13 +11,51 @@ interface JournalEntryCardProps {
 	onDelete?: (entry: JournalEntry) => void;
 }
 
-export default function JournalEntryCard({ entry, onEdit, onDelete }: JournalEntryCardProps) {
+export default function JournalEntryCard({
+	entry,
+	onEdit,
+	onDelete,
+}: JournalEntryCardProps) {
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [showExpandButton, setShowExpandButton] = useState(false);
+	const textRef = useRef<HTMLParagraphElement>(null);
 	const hasTags = entry.tags && entry.tags.length > 0;
+
+	useEffect(() => {
+		const el = textRef.current;
+		if (!el) return;
+
+		// Check if text is clamped in collapsed mode
+		const isOverflowing = el.scrollHeight > el.clientHeight;
+
+		// Check if whitespace-pre-wrap would make it taller than 3 lines
+		const originalWhiteSpace = el.style.whiteSpace;
+		const originalWebkitLineClamp = el.style.webkitLineClamp;
+		const originalOverflow = el.style.overflow;
+		const originalDisplay = el.style.display;
+
+		el.style.whiteSpace = "pre-wrap";
+		el.style.webkitLineClamp = "unset";
+		el.style.overflow = "visible";
+		el.style.display = "block";
+		const expandedHeight = el.scrollHeight;
+
+		el.style.whiteSpace = originalWhiteSpace;
+		el.style.webkitLineClamp = originalWebkitLineClamp;
+		el.style.overflow = originalOverflow;
+		el.style.display = originalDisplay;
+
+		const clampedHeight = el.clientHeight;
+		setShowExpandButton(isOverflowing || expandedHeight > clampedHeight);
+	}, [entry.journalData]);
 
 	return (
 		<div className="bg-card rounded-xl shadow-sm border border-card-border p-4 hover:shadow-md hover:border-primary/20 transition-all duration-200 group">
 			<div className="flex justify-between items-start gap-2">
-				<p className="text-card-foreground text-base leading-relaxed mb-3 flex-1 line-clamp-3">
+				<p
+					ref={textRef}
+					className={`text-card-foreground text-base leading-relaxed mb-3 flex-1 ${isExpanded ? "whitespace-pre-wrap" : "line-clamp-3"}`}
+				>
 					{entry.journalData}
 				</p>
 				<div className="flex items-center gap-1">
@@ -65,12 +104,40 @@ export default function JournalEntryCard({ entry, onEdit, onDelete }: JournalEnt
 				</div>
 			</div>
 			<div className="flex items-center justify-between">
-				<div className="flex flex-wrap gap-1">
-					{hasTags
-						? entry.tags!.map((tag) => (
-								<TagBadge key={tag.id} tag={tag} size="sm" />
-							))
-						: null}
+				<div className="flex items-center gap-2">
+					{showExpandButton && (
+						<button
+							onClick={() => setIsExpanded(!isExpanded)}
+							className="p-1 text-muted-foreground hover:text-primary rounded-md transition-colors flex items-center gap-1 text-xs shrink-0"
+							title={isExpanded ? "Collapse" : "Expand"}
+						>
+							<svg
+								className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M19 9l-7 7-7-7"
+								/>
+							</svg>
+							<span>{isExpanded ? "Collapse" : "Expand"}</span>
+						</button>
+					)}
+					<div className="flex flex-wrap gap-1">
+						{hasTags
+							? entry.tags!.map((tag) => (
+									<TagBadge
+										key={tag.id}
+										tag={tag}
+										size="sm"
+									/>
+								))
+							: null}
+					</div>
 				</div>
 				<span className="text-xs text-muted-foreground">
 					{formatDate(entry.createdAt)}

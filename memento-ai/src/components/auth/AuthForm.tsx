@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AuthForm() {
@@ -49,6 +50,13 @@ export default function AuthForm() {
 		<div className="min-h-screen flex items-center justify-center bg-background px-4">
 			<div className="max-w-md w-full space-y-8">
 				<div className="text-center">
+					<Image
+						src="/memento_logo.svg"
+						alt="Memento AI"
+						width={64}
+						height={64}
+						className="logo-cyan mx-auto mb-4"
+					/>
 					<h1 className="text-4xl font-bold text-foreground mb-2">
 						Memento AI
 					</h1>
