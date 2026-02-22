@@ -9,12 +9,19 @@ import {
 	executeSearchByTag,
 	SearchByTagArgs,
 } from "./searchByTag";
+import {
+	SEARCH_BY_DATE_TOOL,
+	executeSearchByDate,
+	SearchByDateArgs,
+} from "./searchByDate";
 
 // Re-export individual tools
 export { SEARCH_BY_KEYWORD_TOOL, executeSearchByKeyword };
 export type { SearchByKeywordArgs };
 export { SEARCH_BY_TAG_TOOL, executeSearchByTag };
 export type { SearchByTagArgs };
+export { SEARCH_BY_DATE_TOOL, executeSearchByDate };
+export type { SearchByDateArgs };
 
 /**
  * All available tools for the chat completion
@@ -22,6 +29,7 @@ export type { SearchByTagArgs };
 export const ALL_TOOLS: FunctionDefinition[] = [
 	SEARCH_BY_KEYWORD_TOOL,
 	SEARCH_BY_TAG_TOOL,
+	SEARCH_BY_DATE_TOOL,
 ];
 
 /**
@@ -33,6 +41,7 @@ export const TOOL_EXECUTORS: Record<string, ToolExecutor> = {
 	search_by_keyword: (args) =>
 		executeSearchByKeyword(args as SearchByKeywordArgs),
 	search_by_tag: (args) => executeSearchByTag(args as SearchByTagArgs),
+	search_by_date: (args) => executeSearchByDate(args as SearchByDateArgs),
 };
 
 /**

@@ -6,14 +6,14 @@ import { FunctionDefinition } from "@/services/llm/types";
 export const SEARCH_BY_KEYWORD_TOOL: FunctionDefinition = {
 	name: "search_by_keyword",
 	description:
-		"Search the user's journal entries using vector similarity (RAG). The query is embedded and compared against stored journal embeddings via cosine similarity, so the query should be phrased as descriptive statements resembling the content you expect to find — NOT as a question. For example, use 'feeling proud of an accomplishment at work' instead of 'when did I feel proud?'. Pack the query with relevant keywords and context to maximize vector overlap. Prefer this tool for open-ended, feeling-based, or conceptual lookups. Use startTime/endTime when the user mentions a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601).",
+		"Search the user's journal entries using hybrid RAG (semantic vector similarity + lexical keyword matching). This combines meaning-based retrieval with exact text matching (e.g., names, phrases, unique terms). Use this for most recall tasks — especially when the user provides specific wording, names, events, emotions, or quotes. Write the query as a descriptive, content-rich statement that resembles the journal entry you expect to find. Include both conceptual themes and concrete details. Use startTime/endTime when the user references a time period (convert natural language like 'last month' or 'in 2024' to ISO 8601 using the user's timezone). If results are too broad or off-target, call again with a refined or more specific query.",
 	parameters: {
 		type: "object",
 		properties: {
 			query: {
 				type: "string",
 				description:
-					"A descriptive, keyword-rich statement written to resemble the journal content you expect to match. Since this is embedded and compared via cosine similarity, phrase it as a statement (not a question) packed with topical words and context. E.g. 'hiking trip in the mountains with friends, feeling adventurous and free' rather than 'did I go hiking?'.",
+					"A hybrid search query used for both semantic embedding similarity and lexical keyword matching. Write this as a descriptive, keyword-rich statement that resembles journal content — NOT as a question. Include emotions, events, names, relationships, places, beliefs, conflicts, outcomes, and body sensations when relevant. If the user provides an exact phrase, include it verbatim in the query (e.g., I can't do this anymore, Dr. Patel, Barcelona trip). Avoid vague questions like 'when did I feel sad?'. Instead write: 'feeling sad and rejected after argument with my partner, wanting reassurance'. Pack the query with meaningful terms to maximize both semantic and keyword overlap.",
 			},
 			startTime: {
 				type: "string",

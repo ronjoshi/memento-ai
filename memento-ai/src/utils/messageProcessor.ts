@@ -4,7 +4,7 @@ import {
 	JournalReference,
 } from "@/types";
 
-const JOURNAL_SEARCH_TOOLS = ["search_by_keyword", "search_by_tag"];
+const JOURNAL_SEARCH_TOOLS = ["search_by_keyword", "search_by_tag", "search_by_date"];
 
 interface ParsedToolResult {
 	success: boolean;
