@@ -6,9 +6,18 @@ import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function AboutPage() {
-	const { isSignedIn, signIn } = useAuth();
+	const { isSignedIn, signIn, signOut, user } = useAuth();
 	const router = useRouter();
 	const [isSampleLoading, setIsSampleLoading] = useState(false);
+
+	const handleOpenApp = async () => {
+		if (user?.email === "sample@mementoai.com") {
+			await signOut();
+			router.push("/login");
+		} else {
+			router.push("/app/journals");
+		}
+	};
 
 	const handleTestLogin = async () => {
 		setIsSampleLoading(true);
@@ -44,7 +53,7 @@ export default function AboutPage() {
 						<div className="flex items-center space-x-4">
 							{isSignedIn ? (
 								<button
-									onClick={() => router.push("/app/journals")}
+									onClick={handleOpenApp}
 									className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
 								>
 									Go to App
@@ -82,7 +91,7 @@ export default function AboutPage() {
 					</p>
 					<div className="flex flex-col items-center gap-3">
 						<button
-							onClick={() => router.push(isSignedIn ? "/app/journals" : "/login")}
+							onClick={() => isSignedIn ? handleOpenApp() : router.push("/login")}
 							className="px-8 py-3 text-lg font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
 						>
 							{isSignedIn ? "Open App" : "Get Started"}
