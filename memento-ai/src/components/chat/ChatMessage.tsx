@@ -13,7 +13,10 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 	const isUser = message.role === "user";
 	const hasJournals =
 		message.attachedJournals && message.attachedJournals.length > 0;
+	const journalCount = message.attachedJournals?.length || 0;
+	const shouldCollapse = journalCount > 3;
 	const [isVisible, setIsVisible] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	useEffect(() => {
 		// Trigger animation on mount
@@ -35,9 +38,42 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 				{/* Journal pills above assistant message */}
 				{!isUser && hasJournals && (
 					<div className="flex flex-col gap-1 mb-1">
-						{message.attachedJournals!.map((entry) => (
-							<JournalPill key={entry.id} entry={entry} />
-						))}
+						{shouldCollapse ? (
+							<>
+								<button
+									onClick={() => setIsExpanded(!isExpanded)}
+									className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md
+                                       bg-cyan-900/30 text-cyan-200 hover:bg-cyan-900/50
+                                       transition-colors cursor-pointer"
+								>
+									<svg
+										className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M9 5l7 7-7 7"
+										/>
+									</svg>
+									<span>{journalCount} journals found</span>
+								</button>
+								{isExpanded && (
+									<div className="flex flex-col gap-1 mt-1">
+										{message.attachedJournals!.map((entry) => (
+											<JournalPill key={entry.id} entry={entry} />
+										))}
+									</div>
+								)}
+							</>
+						) : (
+							message.attachedJournals!.map((entry) => (
+								<JournalPill key={entry.id} entry={entry} />
+							))
+						)}
 					</div>
 				)}
 
