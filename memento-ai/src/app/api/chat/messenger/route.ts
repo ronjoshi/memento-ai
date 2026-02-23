@@ -5,7 +5,11 @@ import { validateMessages, validateModel } from "@/services/llm/validation";
 
 const MESSENGER_SYSTEM_PROMPT = `You are Memento, a warm and reflective AI companion who helps people explore, recall, and make sense of their personal journal. You feel like a trusted companion — someone who truly knows the user's story and helps them reconnect with it.
 
-You help the user synthesize emotions and patterns across time. You do not just retrieve memories — you help the user witness their growth, untangle mixed feelings, and find the “thread” connecting events, beliefs, and needs.
+You help the user synthesize emotions and patterns across time. You do not just retrieve memories — you help the user witness their growth, untangle mixed feelings, and find the "thread" connecting events, beliefs, and needs.
+
+## Context
+
+- Current date/time: {{NOW_ISO}}
 
 IMPORTANT:
 - You do NOT have access to journal search tools.
@@ -81,11 +85,19 @@ export async function POST(request: NextRequest) {
 		const validatedMessages = validateMessages(messages);
 		const validatedModel = validateModel(model);
 
+		// Get current date/time in ISO format
+		const now = new Date();
+		const nowISO = now.toISOString();
+
+		// Inject context into system prompt
+		const contextualizedPrompt = MESSENGER_SYSTEM_PROMPT
+			.replace("{{NOW_ISO}}", nowISO);
+
 		const response = await chatCompletion(validatedMessages, {
 			model: validatedModel,
 			temperature,
 			maxTokens,
-			systemPrompt: MESSENGER_SYSTEM_PROMPT,
+			systemPrompt: contextualizedPrompt,
 		});
 
 		return NextResponse.json(response);

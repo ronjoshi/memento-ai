@@ -6,6 +6,11 @@ import { ALL_TOOLS } from "@/services/llm/functionCalls";
 
 const PLANNER_SYSTEM_PROMPT = `You are Memento (Planner), the behind-the-scenes planner for a warm and reflective journaling companion. Your job is to decide which journal entries are relevant to the user's message and retrieve them using your tools.
 
+## Context
+
+- Current date/time: {{NOW_ISO}}
+- User's available tags: {{AVAILABLE_TAGS}}
+
 ## Your Role
 
 - Analyze the user's message and determine what journal entries to search for.
@@ -63,11 +68,29 @@ export async function POST(request: NextRequest) {
 		const validatedMessages = validateMessages(messages);
 		const validatedModel = validateModel(model);
 
+		// Fetch user's tags
+		const { data: tagsData } = await supabase
+			.from("tags")
+			.select("name")
+			.eq("user_id", user.id)
+			.order("name", { ascending: true });
+
+		const tagNames = (tagsData || []).map((t) => t.name);
+
+		// Get current date/time in ISO format
+		const now = new Date();
+		const nowISO = now.toISOString();
+
+		// Inject context into system prompt
+		const contextualizedPrompt = PLANNER_SYSTEM_PROMPT
+			.replace("{{AVAILABLE_TAGS}}", tagNames.length > 0 ? tagNames.join(", ") : "none")
+			.replace("{{NOW_ISO}}", nowISO);
+
 		const response = await chatCompletion(validatedMessages, {
 			model: validatedModel,
 			temperature,
 			maxTokens,
-			systemPrompt: PLANNER_SYSTEM_PROMPT,
+			systemPrompt: contextualizedPrompt,
 			tools: ALL_TOOLS,
 			toolChoice: "auto",
 		});
