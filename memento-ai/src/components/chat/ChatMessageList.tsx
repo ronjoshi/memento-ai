@@ -8,11 +8,13 @@ import ChatMessage from "./ChatMessage";
 interface ChatMessageListProps {
 	messages: ConversationMessage[];
 	isLoading: boolean;
+	emptyStateExtra?: React.ReactNode;
 }
 
 export default function ChatMessageList({
 	messages,
 	isLoading,
+	emptyStateExtra,
 }: ChatMessageListProps) {
 	const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -48,6 +50,7 @@ export default function ChatMessageList({
 					<p className="text-sm text-muted-foreground/70 mt-1">
 						Start a conversation below
 					</p>
+					{emptyStateExtra}
 				</div>
 			</div>
 		);

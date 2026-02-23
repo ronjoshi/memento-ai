@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
+import PhoneMockup from "@/components/ui/PhoneMockup";
 
 export default function AboutPage() {
 	const { isSignedIn, signIn, signOut, user } = useAuth();
@@ -106,79 +107,20 @@ export default function AboutPage() {
 					</div>
 				</div>
 
-				{/* Features Section */}
-				<div className="mt-24 grid md:grid-cols-3 gap-8">
-					<div className="text-center p-6">
-						<div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-							<svg
-								className="w-6 h-6 text-primary"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-								/>
-							</svg>
-						</div>
-						<h3 className="text-lg font-semibold text-foreground mb-2">
-							Store Journal Entries
-						</h3>
-						<p className="text-muted-foreground">
-							Capture and store your thoughts, ideas, and experiences in a secure, personal journal.
-						</p>
-					</div>
-
-					<div className="text-center p-6">
-						<div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-							<svg
-								className="w-6 h-6 text-primary"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-								/>
-							</svg>
-						</div>
-						<h3 className="text-lg font-semibold text-foreground mb-2">
-							Smart Search
-						</h3>
-						<p className="text-muted-foreground">
-							Find what you&apos;re looking for instantly with AI-powered semantic search.
-						</p>
-					</div>
-
-					<div className="text-center p-6">
-						<div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-							<svg
-								className="w-6 h-6 text-primary"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-								/>
-							</svg>
-						</div>
-						<h3 className="text-lg font-semibold text-foreground mb-2">
-							AI Chat
-						</h3>
-						<p className="text-muted-foreground">
-							Chat with an AI that knows your journal and can help you recall information.
-						</p>
-					</div>
+				{/* Video Previews */}
+				<div className="mt-24 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-12">
+					<PhoneMockup
+						videoSrc="/newmemory_vid.mov"
+						caption="Create journal entries"
+					/>
+					<PhoneMockup
+						videoSrc="/searching_in_chat_vid.mov"
+						caption="Search through your memories"
+					/>
+					<PhoneMockup
+						videoSrc="/asking_about_mood_shifts_vid.mov"
+						caption="Chat with your journal"
+					/>
 				</div>
 			</main>
 

@@ -1,14 +1,23 @@
 "use client";
 
-import { useState, KeyboardEvent } from "react";
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
 
 interface ChatInputProps {
 	onSend: (content: string) => void;
 	isLoading: boolean;
+	externalValue?: string;
 }
 
-export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
+export default function ChatInput({ onSend, isLoading, externalValue }: ChatInputProps) {
 	const [message, setMessage] = useState("");
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (externalValue !== undefined && externalValue !== "") {
+			setMessage(externalValue);
+			inputRef.current?.focus();
+		}
+	}, [externalValue]);
 
 	const handleSend = () => {
 		if (message.trim() && !isLoading) {
@@ -27,6 +36,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
 	return (
 		<div className="flex items-center gap-3 p-4 border-t border-border bg-card">
 			<input
+				ref={inputRef}
 				type="text"
 				value={message}
 				onChange={(e) => setMessage(e.target.value)}

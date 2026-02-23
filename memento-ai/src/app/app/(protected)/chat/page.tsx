@@ -2,12 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useChat } from "@/contexts/ChatContext";
+import { useTestAccount } from "@/hooks/useTestAccount";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInput from "@/components/chat/ChatInput";
+import SamplePrompts from "@/components/chat/SamplePrompts";
 
 export default function ChatPage() {
 	const router = useRouter();
 	const { messages, isLoading, sendMessage, clearChat } = useChat();
+	const { isTestAccount } = useTestAccount();
+
+	const emptyStateExtra = isTestAccount ? (
+		<SamplePrompts onSelectPrompt={sendMessage} />
+	) : undefined;
 
 	return (
 		<div className="h-screen flex flex-col bg-background">
@@ -57,7 +64,7 @@ export default function ChatPage() {
 
 			{/* Messages */}
 			<div className="flex-1 overflow-hidden max-w-7xl mx-auto w-full flex flex-col">
-				<ChatMessageList messages={messages} isLoading={isLoading} />
+				<ChatMessageList messages={messages} isLoading={isLoading} emptyStateExtra={emptyStateExtra} />
 			</div>
 
 			{/* Input */}
