@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { DisplayMessage } from "@/types";
 import { formatDate } from "@/utils/date";
 import JournalPill from "./JournalPill";
@@ -84,7 +86,37 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 							: "bg-muted text-foreground"
 					}`}
 				>
-					<p className="text-sm whitespace-pre-wrap">{message.content}</p>
+					{isUser ? (
+						<p className="text-sm whitespace-pre-wrap">{message.content}</p>
+					) : (
+						<div className="text-sm prose prose-sm max-w-none">
+							<ReactMarkdown
+								remarkPlugins={[remarkGfm]}
+								components={{
+									p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+									ul: ({ children }) => <ul className="my-2 space-y-1">{children}</ul>,
+									ol: ({ children }) => <ol className="my-2 space-y-1">{children}</ol>,
+									li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+									h1: ({ children }) => <h1 className="text-base font-semibold mb-2 mt-3 first:mt-0">{children}</h1>,
+									h2: ({ children }) => <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0">{children}</h2>,
+									h3: ({ children }) => <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0">{children}</h3>,
+									code: ({ inline, children, ...props }: any) =>
+										inline ? (
+											<code className="bg-primary/10 text-primary px-1 py-0.5 rounded text-xs" {...props}>
+												{children}
+											</code>
+										) : (
+											<code className="block bg-card border border-border rounded p-2 text-xs overflow-x-auto" {...props}>
+												{children}
+											</code>
+										),
+									pre: ({ children }) => <pre className="my-2">{children}</pre>,
+								}}
+							>
+								{message.content}
+							</ReactMarkdown>
+						</div>
+					)}
 				</div>
 				<span className="text-xs text-muted-foreground mt-1">
 					{formatDate(message.createdAt)}
