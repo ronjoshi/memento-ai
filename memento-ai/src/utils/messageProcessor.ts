@@ -36,11 +36,11 @@ export function processMessagesForDisplay(
 			continue;
 		}
 
-		// Skip assistant messages with no content
+		// Skip assistant messages from the planner or with no content
 		if (message.role === "assistant") {
 			const hasContent = message.content && message.content.trim() !== "";
 
-			if (!hasContent) {
+			if (!hasContent || message.isPlanner) {
 				continue;
 			}
 

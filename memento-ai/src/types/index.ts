@@ -187,6 +187,7 @@ export interface ConversationMessage {
 	tool_calls?: ToolCall[];
 	tool_call_id?: string;
 	reasoning_content?: string;
+	isPlanner?: boolean;
 }
 
 // ============================================================================

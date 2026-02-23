@@ -19,6 +19,7 @@ function createConversationMessage(
 		tool_calls?: ToolCall[];
 		tool_call_id?: string;
 		reasoning_content?: string;
+		isPlanner?: boolean;
 	},
 ): ConversationMessage {
 	return {
@@ -31,6 +32,7 @@ function createConversationMessage(
 		tool_calls: options?.tool_calls,
 		tool_call_id: options?.tool_call_id,
 		reasoning_content: options?.reasoning_content,
+		isPlanner: options?.isPlanner,
 	};
 }
 
@@ -95,51 +97,56 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 			updateMessages(currentMessages);
 
 			try {
+				// ============================================================
+				// Step 1: Planner agent — retrieves memories via tool calls
+				// ============================================================
 				const maxToolIterations = 5;
 				let iterations = 0;
 
 				while (iterations < maxToolIterations) {
 					iterations++;
 
-					const response = await fetch("/api/chat/completion", {
+					const plannerResponse = await fetch("/api/chat/planner", {
 						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
+						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
 							messages: prepareMessagesForAPI(currentMessages),
 						}),
 					});
 
-					if (!response.ok) {
-						const error = await response.json();
-						throw new Error(error.error || "Failed to get response");
+					if (!plannerResponse.ok) {
+						const error = await plannerResponse.json();
+						throw new Error(error.error || "Planner failed");
 					}
 
-					const data: LLMResponse = await response.json();
+					const plannerData: LLMResponse = await plannerResponse.json();
 
-					const assistantMessage = createConversationMessage(
+					// Add planner's assistant message (may contain tool_calls)
+					const plannerMessage = createConversationMessage(
 						conversationId,
 						"assistant",
-						data.content,
+						plannerData.content,
 						{
-							tool_calls: data.tool_calls,
-							reasoning_content: data.reasoning_content,
+							tool_calls: plannerData.tool_calls,
+							reasoning_content: plannerData.reasoning_content,
+							isPlanner: true,
 						},
 					);
-					currentMessages = [...currentMessages, assistantMessage];
+					currentMessages = [...currentMessages, plannerMessage];
 					updateMessages(currentMessages);
 
-					if (!data.tool_calls || data.tool_calls.length === 0) {
+					// If no tool calls, planner is done
+					if (!plannerData.tool_calls || plannerData.tool_calls.length === 0) {
 						break;
 					}
 
 					console.log(
-						`Tool call iteration ${iterations}:`,
-						data.tool_calls.map((tc) => tc.function.name),
+						`Planner tool call iteration ${iterations}:`,
+						plannerData.tool_calls.map((tc) => tc.function.name),
 					);
 
-					for (const toolCall of data.tool_calls) {
+					// Execute each tool call
+					for (const toolCall of plannerData.tool_calls) {
 						console.log(
 							`Executing tool: ${toolCall.function.name}`,
 							toolCall.function.arguments,
@@ -167,8 +174,37 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 				}
 
 				if (iterations >= maxToolIterations) {
-					console.warn("Max tool iterations reached");
+					console.warn("Max planner tool iterations reached");
 				}
+
+				// ============================================================
+				// Step 2: Messenger agent — generates final user-facing response
+				// ============================================================
+				const messengerResponse = await fetch("/api/chat/messenger", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						messages: prepareMessagesForAPI(currentMessages),
+					}),
+				});
+
+				if (!messengerResponse.ok) {
+					const error = await messengerResponse.json();
+					throw new Error(error.error || "Messenger failed");
+				}
+
+				const messengerData: LLMResponse = await messengerResponse.json();
+
+				const messengerMessage = createConversationMessage(
+					conversationId,
+					"assistant",
+					messengerData.content?.trim() ?? null,
+					{
+						reasoning_content: messengerData.reasoning_content,
+					},
+				);
+				currentMessages = [...currentMessages, messengerMessage];
+				updateMessages(currentMessages);
 			} catch (error) {
 				console.error("Error sending message:", error);
 				const errorMessage = createConversationMessage(
