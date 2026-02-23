@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useChat } from "@/contexts/ChatContext";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInput from "@/components/chat/ChatInput";
@@ -16,19 +15,13 @@ export default function ChatPage() {
 			<header className="bg-card shadow-sm border-b border-card-border">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 					<div className="flex items-center">
-						{/* Left: Logo (links to journals) */}
+						{/* Left: Journals button */}
 						<div className="flex-1">
 							<button
 								onClick={() => router.push("/app/journals")}
-								className="flex items-center gap-2"
+								className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
 							>
-								<Image
-									src="/memento_logo.svg"
-									alt="Memento"
-									width={40}
-									height={40}
-									className="logo-cyan"
-								/>
+								&larr; Journals
 							</button>
 						</div>
 

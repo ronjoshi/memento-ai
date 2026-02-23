@@ -4,20 +4,22 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTags } from "@/contexts/TagContext";
 import { useTestAccount } from "@/hooks/useTestAccount";
 import { JournalEntry, Tag, TagColor } from "@/types";
 import JournalEntryList from "@/components/journals/JournalEntryList";
 import JournalEntryModal from "@/components/journals/JournalEntryModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import Toast from "@/components/ui/Toast";
+import TagFilter from "@/components/journals/TagFilter";
 
 export default function JournalsPage() {
 	const { signOut } = useAuth();
+	const { availableTags, selectedTagIds, createTag, deleteTag } = useTags();
 	const { isTestAccount, toastVisible, toastMessage, showToast, hideToast } = useTestAccount();
 	const router = useRouter();
 	const PAGE_SIZE = 50;
 	const [entries, setEntries] = useState<JournalEntry[]>([]);
-	const [tags, setTags] = useState<Tag[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isLoadingMore, setIsLoadingMore] = useState(false);
 	const [hasMore, setHasMore] = useState(false);
@@ -34,53 +36,66 @@ export default function JournalsPage() {
 				setIsLoading(true);
 			}
 
-			const response = await fetch(
-				`/api/memories?limit=${PAGE_SIZE}&offset=${offset}`
-			);
+			let data: any;
 
-			if (!response.ok) {
-				throw new Error("Failed to fetch journal entries");
-			}
+			// Check if filtering by tags
+			if (selectedTagIds.length > 0) {
+				// Use /api/search/tag endpoint for filtering
+				const response = await fetch("/api/search/tag", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						tagIds: selectedTagIds,
+						limit: PAGE_SIZE,
+						offset: offset
+					}),
+				});
 
-			const data = await response.json();
+				if (!response.ok) {
+					throw new Error("Failed to fetch filtered journal entries");
+				}
 
-			if (append) {
-				setEntries((prev) => [...prev, ...data.journals]);
+				data = await response.json();
+				// Pagination is now supported when filtering
+				if (append) {
+					setEntries((prev) => [...prev, ...data.journals]);
+				} else {
+					setEntries(data.journals);
+				}
+				setHasMore(data.hasMore);
 			} else {
-				setEntries(data.journals);
+				// Use regular endpoint with pagination
+				const response = await fetch(
+					`/api/memories?limit=${PAGE_SIZE}&offset=${offset}`
+				);
+
+				if (!response.ok) {
+					throw new Error("Failed to fetch journal entries");
+				}
+
+				data = await response.json();
+				if (append) {
+					setEntries((prev) => [...prev, ...data.journals]);
+				} else {
+					setEntries(data.journals);
+				}
+				setHasMore(data.hasMore);
 			}
-			setHasMore(data.hasMore);
 		} catch (error) {
 			console.error("Error loading journal entries:", error);
 		} finally {
 			setIsLoading(false);
 			setIsLoadingMore(false);
 		}
-	}, []);
+	}, [selectedTagIds]);
 
 	const handleLoadMore = () => {
 		loadJournals(entries.length, true);
 	};
 
-	const loadTags = useCallback(async () => {
-		try {
-			const response = await fetch("/api/tags");
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch tags");
-			}
-
-			const data = await response.json();
-			setTags(data.tags);
-		} catch (error) {
-			console.error("Error loading tags:", error);
-		}
-	}, []);
-
 	useEffect(() => {
 		loadJournals();
-		loadTags();
-	}, [loadJournals, loadTags]);
+	}, [loadJournals]);
 
 	const handleSaveJournal = async (journalData: string, tagIds: number[], createdAt?: string) => {
 		if (editingEntry) {
@@ -178,22 +193,7 @@ export default function JournalsPage() {
 			showToast();
 			throw new Error("Disabled for test account");
 		}
-		const response = await fetch("/api/tags", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ name, color }),
-		});
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.error || "Failed to create tag");
-		}
-
-		const data = await response.json();
-		setTags((prev) => [...prev, data.tag]);
-		return data.tag;
+		return await createTag(name, color);
 	};
 
 	const handleDeleteTag = async (tagId: number): Promise<void> => {
@@ -201,16 +201,7 @@ export default function JournalsPage() {
 			showToast();
 			return;
 		}
-		const response = await fetch(`/api/tags/${tagId}`, {
-			method: "DELETE",
-		});
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.error || "Failed to delete tag");
-		}
-
-		setTags((prev) => prev.filter((tag) => tag.id !== tagId));
+		await deleteTag(tagId);
 	};
 
 	const handleSignOut = async () => {
@@ -318,6 +309,7 @@ export default function JournalsPage() {
 
 			{/* Main Content */}
 			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+				<TagFilter />
 				<JournalEntryList
 					entries={entries}
 					isLoading={isLoading}
@@ -334,7 +326,7 @@ export default function JournalsPage() {
 				isOpen={showModal}
 				onClose={handleCloseModal}
 				onSave={handleSaveJournal}
-				availableTags={tags}
+				availableTags={availableTags}
 				onCreateTag={handleCreateTag}
 				onDeleteTag={handleDeleteTag}
 				editingEntry={editingEntry}
