@@ -47,6 +47,8 @@ export class DatabaseService {
 		tagIds?: number[];
 		startTime?: string;
 		endTime?: string;
+		limit?: number;
+		offset?: number;
 	}): Promise<JournalEntry[]> {
 		const {
 			data: { user },
@@ -69,6 +71,14 @@ export class DatabaseService {
 		}
 		if (opts.tagIds && opts.tagIds.length > 0) {
 			query = query.overlaps("tag_ids", opts.tagIds);
+		}
+
+		// Apply pagination if provided
+		if (opts.limit !== undefined) {
+			query = query.limit(opts.limit);
+		}
+		if (opts.offset !== undefined) {
+			query = query.range(opts.offset, opts.offset + (opts.limit || 50) - 1);
 		}
 
 		const { data, error } = await query.order("created_at", {
