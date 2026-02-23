@@ -65,6 +65,20 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
 	// Helper to update both state and ref in sync
 	const updateMessages = useCallback((msgs: ConversationMessage[]) => {
+		// Log the newly added message(s)
+		if (msgs.length > messagesRef.current.length) {
+			const newMessages = msgs.slice(messagesRef.current.length);
+			newMessages.forEach((msg) => {
+				console.log("📨 New chat message:", {
+					role: msg.role,
+					content: msg.content,
+					tool_calls: msg.tool_calls,
+					tool_call_id: msg.tool_call_id,
+					createdAt: msg.createdAt,
+					id: msg.id,
+				});
+			});
+		}
 		messagesRef.current = msgs;
 		setMessages(msgs);
 	}, []);

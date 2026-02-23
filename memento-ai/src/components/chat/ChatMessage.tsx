@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { DisplayMessage } from "@/types";
 import { formatDate } from "@/utils/date";
 import JournalPill from "./JournalPill";
@@ -13,7 +15,10 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 	const isUser = message.role === "user";
 	const hasJournals =
 		message.attachedJournals && message.attachedJournals.length > 0;
+	const journalCount = message.attachedJournals?.length || 0;
+	const shouldCollapse = journalCount > 3;
 	const [isVisible, setIsVisible] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	useEffect(() => {
 		// Trigger animation on mount
@@ -35,9 +40,42 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 				{/* Journal pills above assistant message */}
 				{!isUser && hasJournals && (
 					<div className="flex flex-col gap-1 mb-1">
-						{message.attachedJournals!.map((entry) => (
-							<JournalPill key={entry.id} entry={entry} />
-						))}
+						{shouldCollapse ? (
+							<>
+								<button
+									onClick={() => setIsExpanded(!isExpanded)}
+									className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md
+                                       bg-cyan-900/30 text-cyan-200 hover:bg-cyan-900/50
+                                       transition-colors cursor-pointer"
+								>
+									<svg
+										className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M9 5l7 7-7 7"
+										/>
+									</svg>
+									<span>{journalCount} journals found</span>
+								</button>
+								{isExpanded && (
+									<div className="flex flex-col gap-1 mt-1">
+										{message.attachedJournals!.map((entry) => (
+											<JournalPill key={entry.id} entry={entry} />
+										))}
+									</div>
+								)}
+							</>
+						) : (
+							message.attachedJournals!.map((entry) => (
+								<JournalPill key={entry.id} entry={entry} />
+							))
+						)}
 					</div>
 				)}
 
@@ -48,7 +86,37 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 							: "bg-muted text-foreground"
 					}`}
 				>
-					<p className="text-sm whitespace-pre-wrap">{message.content}</p>
+					{isUser ? (
+						<p className="text-sm whitespace-pre-wrap">{message.content}</p>
+					) : (
+						<div className="text-sm prose prose-sm max-w-none">
+							<ReactMarkdown
+								remarkPlugins={[remarkGfm]}
+								components={{
+									p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+									ul: ({ children }) => <ul className="my-2 space-y-1">{children}</ul>,
+									ol: ({ children }) => <ol className="my-2 space-y-1">{children}</ol>,
+									li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+									h1: ({ children }) => <h1 className="text-base font-semibold mb-2 mt-3 first:mt-0">{children}</h1>,
+									h2: ({ children }) => <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0">{children}</h2>,
+									h3: ({ children }) => <h3 className="text-sm font-semibold mb-2 mt-2 first:mt-0">{children}</h3>,
+									code: ({ inline, children, ...props }: any) =>
+										inline ? (
+											<code className="bg-primary/10 text-primary px-1 py-0.5 rounded text-xs" {...props}>
+												{children}
+											</code>
+										) : (
+											<code className="block bg-card border border-border rounded p-2 text-xs overflow-x-auto" {...props}>
+												{children}
+											</code>
+										),
+									pre: ({ children }) => <pre className="my-2">{children}</pre>,
+								}}
+							>
+								{message.content}
+							</ReactMarkdown>
+						</div>
+					)}
 				</div>
 				<span className="text-xs text-muted-foreground mt-1">
 					{formatDate(message.createdAt)}
