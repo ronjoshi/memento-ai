@@ -149,6 +149,15 @@ export default function AuthForm() {
 						</>
 					)}
 				</form>
+
+				<div className="bg-card border border-card-border rounded-xl px-4 py-3">
+					<p className="text-xs text-muted-foreground text-center leading-relaxed">
+						<span className="font-medium text-foreground">Heads up:</span>{" "}
+						This is a personal demo project, not a production app. There&apos;s no
+						privacy policy — the only guarantee your data stays private is a pinky
+						promise. You&apos;re welcome to use it, just know what you&apos;re signing up for.
+					</p>
+				</div>
 			</div>
 		</div>
 	);
