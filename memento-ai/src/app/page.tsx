@@ -1,34 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import PhoneMockup from "@/components/ui/PhoneMockup";
 
 export default function AboutPage() {
-	const { isSignedIn, signIn, signOut, user } = useAuth();
+	const { isSignedIn, signOut, user } = useAuth();
 	const router = useRouter();
-	const [isSampleLoading, setIsSampleLoading] = useState(false);
 	const isSampleUser = user?.email === "sample@mementoai.com";
 	const isRealUser = isSignedIn && !isSampleUser;
 
 	const handleOpenApp = async () => {
-		if (user?.email === "sample@mementoai.com") {
+		if (isSampleUser) {
 			await signOut();
 			router.push("/login");
 		} else {
 			router.push("/app/journals");
-		}
-	};
-
-	const handleTestLogin = async () => {
-		setIsSampleLoading(true);
-		try {
-			await signIn("sample@mementoai.com", "sample@mementoai.com");
-			router.push("/app/journals");
-		} catch {
-			setIsSampleLoading(false);
 		}
 	};
 
@@ -113,13 +101,10 @@ export default function AboutPage() {
 								{isRealUser ? "Open App" : "Get Started"}
 							</button>
 							<button
-								onClick={handleTestLogin}
-								disabled={isSampleLoading}
-								className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors disabled:opacity-50"
+								onClick={() => router.push("/demo")}
+								className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors"
 							>
-								{isSampleLoading
-									? "Signing in..."
-									: "Try the Demo"}
+								Try the Demo
 							</button>
 						</div>
 					</div>
@@ -390,16 +375,13 @@ export default function AboutPage() {
 									}
 									className="px-8 py-3 text-lg font-medium text-primary-foreground bg-primary hover:bg-primary-hover rounded-xl shadow-sm transition-colors"
 								>
-									{isSignedIn ? "Open App" : "Get Started"}
+									{isRealUser ? "Open App" : "Get Started"}
 								</button>
 								<button
-									onClick={handleTestLogin}
-									disabled={isSampleLoading}
-									className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors disabled:opacity-50"
+									onClick={() => router.push("/demo")}
+									className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors"
 								>
-									{isSampleLoading
-										? "Signing in..."
-										: "Try the Demo"}
+									Try the Demo
 								</button>
 							</div>
 						</div>
