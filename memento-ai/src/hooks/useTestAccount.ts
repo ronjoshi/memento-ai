@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, ReactNode, createElement } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const TEST_EMAIL = "sample@mementoai.com";
-const TEST_MESSAGE = "This is disabled for the test account!";
 
 export function useTestAccount() {
 	const { user } = useAuth();
@@ -20,10 +19,25 @@ export function useTestAccount() {
 		setToastVisible(false);
 	}, []);
 
+	const toastMessage: ReactNode = createElement(
+		"span",
+		null,
+		"Creating, editing, and deleting memories is disabled for the test account! Head to the ",
+		createElement(
+			"a",
+			{
+				href: "/app/chat",
+				className: "font-semibold text-primary underline cursor-pointer",
+			},
+			"Chat"
+		),
+		" to try the AI."
+	);
+
 	return {
 		isTestAccount,
 		toastVisible,
-		toastMessage: TEST_MESSAGE,
+		toastMessage,
 		showToast,
 		hideToast,
 	};

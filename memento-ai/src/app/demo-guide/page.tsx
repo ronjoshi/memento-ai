@@ -155,12 +155,12 @@ export default function DemoPage() {
 				{/* Hero */}
 				<div className="text-center mb-10">
 					<h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
-						Try the Demo
+						Demo Guide
 					</h1>
 					<p className="text-muted-foreground max-w-xl mx-auto">
-						A realistic journal account with months of daily
-						entries. Explore it to see how the AI searches,
-						connects, and reflects.
+						The test account contains a full year of realistic daily
+						journal entries. Here&apos;s what&apos;s inside and how to get
+						the most out of it.
 					</p>
 				</div>
 
@@ -173,6 +173,9 @@ export default function DemoPage() {
 					>
 						{isLoading ? "Signing in..." : "Open Test Account"}
 					</button>
+					<p className="text-sm text-muted-foreground mb-4">
+						Browse the entries, then open the Chat to ask questions about them.
+					</p>
 					<div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
 						{ACCOUNT_TAGS.map((tag) => (
 							<span
@@ -189,10 +192,10 @@ export default function DemoPage() {
 				<section className="mb-16">
 					<div className="text-center mb-8">
 						<h2 className="text-2xl font-bold text-foreground mb-2">
-							What&apos;s in the journal
+							What&apos;s in the account
 						</h2>
 						<p className="text-sm text-muted-foreground">
-							A year of entries tracking one person&apos;s growth.
+							A fictional year of daily entries tracking one person&apos;s growth, organized by arc.
 						</p>
 					</div>
 
@@ -220,10 +223,10 @@ export default function DemoPage() {
 				<section>
 					<div className="text-center mb-8">
 						<h2 className="text-2xl font-bold text-foreground mb-2">
-							Example prompts
+							Prompts to try
 						</h2>
 						<p className="text-sm text-muted-foreground">
-							Tap to copy, then paste into the chat.
+							Copy any of these and paste them into the Chat. They&apos;re designed to show off different retrieval and synthesis patterns.
 						</p>
 					</div>
 

@@ -1,13 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import PhoneMockup from "@/components/ui/PhoneMockup";
 
 export default function AboutPage() {
-	const { isSignedIn, signOut, user } = useAuth();
+	const { isSignedIn, signOut, signIn, user } = useAuth();
 	const router = useRouter();
+	const [isDemoLoading, setIsDemoLoading] = useState(false);
 	const isSampleUser = user?.email === "sample@mementoai.com";
 	const isRealUser = isSignedIn && !isSampleUser;
 
@@ -17,6 +19,16 @@ export default function AboutPage() {
 			router.push("/login");
 		} else {
 			router.push("/app/journals");
+		}
+	};
+
+	const handleTryDemo = async () => {
+		setIsDemoLoading(true);
+		try {
+			await signIn("sample@mementoai.com", "sample@mementoai.com");
+			router.push("/app/journals");
+		} catch {
+			setIsDemoLoading(false);
 		}
 	};
 
@@ -101,10 +113,11 @@ export default function AboutPage() {
 								{isRealUser ? "Open App" : "Get Started"}
 							</button>
 							<button
-								onClick={() => router.push("/demo")}
-								className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors"
+								onClick={handleTryDemo}
+								disabled={isDemoLoading}
+								className="px-6 py-3 text-lg font-medium text-primary border border-primary hover:bg-primary/10 rounded-xl transition-colors disabled:opacity-50"
 							>
-								Try the Demo
+								{isDemoLoading ? "Loading..." : "Try the Demo"}
 							</button>
 						</div>
 					</div>

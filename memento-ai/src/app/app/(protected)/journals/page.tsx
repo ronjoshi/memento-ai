@@ -284,6 +284,32 @@ export default function JournalsPage() {
 				</div>
 			</header>
 
+			{/* Demo Account Banner */}
+			{isTestAccount && (
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+					<div className="bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 text-center">
+						<p className="text-sm text-muted-foreground">
+							<span className="font-medium text-foreground">Demo account</span> — editing memories is disabled.{" "}
+							Head to the{" "}
+							<button
+								onClick={() => router.push("/app/chat")}
+								className="font-semibold text-primary underline decoration-primary/50 hover:decoration-primary cursor-pointer"
+							>
+								Chat
+							</button>
+							{" "}to try the AI, or check out the{" "}
+							<button
+								onClick={() => router.push("/demo-guide")}
+								className="font-semibold text-primary underline decoration-primary/50 hover:decoration-primary cursor-pointer"
+							>
+								demo guide
+							</button>
+							{" "}for example prompts.
+						</p>
+					</div>
+				</div>
+			)}
+
 			{/* New Journal Button */}
 			<div className="flex justify-center py-6">
 				<button

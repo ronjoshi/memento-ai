@@ -7,7 +7,7 @@ interface PhoneMockupProps {
 
 export default function PhoneMockup({ videoSrc, caption }: PhoneMockupProps) {
 	return (
-		<div className="flex flex-col items-center gap-4 w-full max-w-[260px]">
+		<div className="flex flex-col items-center gap-4 w-full max-w-[260px] lg:max-w-[300px] xl:max-w-[340px]">
 			{/* Phone shell */}
 			<div className="w-full rounded-[2.5rem] border-2 border-card-border bg-black p-[6px] shadow-[0_0_40px_rgba(34,211,238,0.08)]">
 				{/* Inner screen */}
