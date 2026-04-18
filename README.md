@@ -1,5 +1,7 @@
 # Memento AI
 
+**Live Demo:** [memento-ai.vercel.app](https://memento-ai.vercel.app)
+
 An AI-powered personal journaling app that uses semantic memory search and a multi-agent conversational AI to help you reflect on your life. Write journal entries, tag and organize them, search through your memories with natural language, and chat with an AI companion that actually understands your history.
 
 > **Warning:** This project is not production-ready. User data is **not** encrypted at rest and there are no privacy guarantees. Use at your own risk.
